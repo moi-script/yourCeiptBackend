@@ -1,27 +1,42 @@
 import User from '../models/User.js'; // Import the model to talk to the DB
 import bcrypt from 'bcryptjs';
 
+
+
+const delay = (res) => {
+  return new Promise((acc, rej) => {
+
+    setTimeout(() => {
+      console.log('After delay');
+      acc(() => res.status(201).json({ message: 'account created successfully' }))
+    }, 5000);
+  }) 
+}
+
+
 export const createUser = async (req, res) => {
-    console.log('Creating user :: ');
+  console.log('Creating user :: ');
 
-    const { nickname, fullname, email, password} = req.body;
+  const { nickname, fullname, email, password } = req.body;
 
-    if(!password || typeof password !== 'string') {
-        return res.status(400).json({error : 'Invalid password'});
-    }
+  if (!password || typeof password !== 'string') {
+    return res.status(400).json({ error: 'Invalid password' });
+  }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
+  const salt = await bcrypt.genSalt(10);
+  const hashPassword = await bcrypt.hash(password, salt);
   try {
 
-    const newUser = await User.create({
-        nickname,
-        fullname, 
-        email,
-        password : hashPassword
+    await User.create({
+      nickname,
+      fullname,
+      email,
+      password: hashPassword
     });
 
-    res.status(201).json(newUser);
+    const status = await delay(res);
+    status();
+
   } catch (error) {
     console.log('There was an error creating an account');
     res.status(500).json({ error: error.message });
