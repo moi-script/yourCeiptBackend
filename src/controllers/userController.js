@@ -15,7 +15,7 @@ const delay = (res) => {
 
 
 export const createUser = async (req, res) => {
-  console.log('Creating user :: ');
+  consoe.log('Creating user :: ');
 
   const { nickname, fullname, email, password } = req.body;
 
@@ -42,6 +42,18 @@ export const createUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+export const checkPassword = async (loginEmail, password) => {
+  const user = User.findOne({email : loginEmail});
+
+  const isMatch = await user.checkPassword(password);
+
+  if(isMatch) {
+    console.log('User exist');
+  }
+} 
+
 
 export const getAllUsers = async (req, res) => {
   try {
