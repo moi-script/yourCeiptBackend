@@ -15,7 +15,7 @@ const delay = (res) => {
 
 
 export const createUser = async (req, res) => {
-  consoe.log('Creating user :: ');
+  console.log('Creating user :: ');
 
   const { nickname, fullname, email, password } = req.body;
 

@@ -14,15 +14,21 @@ import sanitize from 'mongo-sanitize';
 
 
 export const transformLogin = (req, res, next) => {
-    if(req.body.email){
-        req.body.email = req.body.email.toLowerCase().trim();
-    }
-    if(req.body.password) {
-        req.body.password = req.body.password.trim()
+    console.log('Transform');
+    
+    try {
+        if (req.body.email) {
+            req.body.email = req.body.email.toLowerCase().trim();
+        }
+        if (req.body.password) {
+            req.body.password = req.body.password.trim()
+        }
+        req.body = sanitize(req.body);
+
+        next();
+    } catch (err) {
+        res.status(500).send('lol');
     }
 
-    req.body  = sanitize(req.body);
-
-    next();
 }
 

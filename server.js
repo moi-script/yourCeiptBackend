@@ -2,7 +2,7 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 // import multer from 'multer';
-import  router  from './src/router/user.js';
+import  router  from './src/router/auth.js';
 import { connectDB } from './src/config/db.js';
 
 const app = express();
@@ -15,6 +15,17 @@ app.use(helmet());
 
 await connectDB();
 
-app.use('/register', router);
+app.use('/user', router);
+// app.use('/test', router);
 
-app.listen(process.env.PORT, () => console.log('Server is running'));
+
+
+// app.post('/login', 
+//     (req, res) => {
+//         res.status(200).send('Hello world');
+//         console.log('After sanitation :: ', req.body);
+
+//     }
+// )
+
+app.listen(process.env.PORT, () => console.log('Server is running at port :: ' + process.env.PORT));
