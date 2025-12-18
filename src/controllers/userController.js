@@ -10,7 +10,7 @@ const delay = (res) => {
       console.log('After delay');
       acc(() => res.status(201).json({ message: 'account created successfully' }))
     }, 5000);
-  }) 
+  })
 }
 
 
@@ -44,15 +44,18 @@ export const createUser = async (req, res) => {
 };
 
 
-export const checkPassword = async (loginEmail, password) => {
-  const user = User.findOne({email : loginEmail});
+export const userAuth = async (loginEmail, password) => { // needed to parse the incomming request in userAuth
 
-  const isMatch = await user.checkPassword(password);
-
-  if(isMatch) {
-    console.log('User exist');
+  const user = User.findOne({ email: loginEmail });
+  if (user.checkPassword) {
+    const isMatch = await user?.checkPassword(password);
+    if (isMatch) {
+      console.log('User exist');
+    } 
   }
-} 
+  else console.log('Does not exist');
+
+}
 
 
 export const getAllUsers = async (req, res) => {
