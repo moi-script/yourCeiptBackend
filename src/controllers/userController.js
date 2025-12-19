@@ -1,6 +1,9 @@
 import User from '../models/User.js'; // Import the model to talk to the DB
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 
 const delay = (res) => {
@@ -14,7 +17,7 @@ const delay = (res) => {
 }
 
 
-export const createUser = async (req, res) => {
+export const createUser = async (req, res, next) => {
   console.log('Creating user :: ');
 
   const { nickname, fullname, email, password } = req.body;
@@ -33,10 +36,10 @@ export const createUser = async (req, res) => {
       email,
       password: hashPassword
     });
-  
+
+    next();
     // const status = await delay(res);
     // status();
-    res.status(201).json({ message: 'account created successfully' });
 
   } catch (error) {
     console.log('There was an error creating an account');
@@ -55,9 +58,18 @@ export const userAuth = async (req, res) => { // needed to parse the incomming r
   if (user.checkPassword) {
     const isMatch = await user.checkPassword(req.body.password);
     if (isMatch) {
+
+
+      // 
+      // res.send('Logged in');
+
+      console.log("Cookies token:: ", token);
+      console.log("Refresh Cookies token:: ", refreshToken);
       console.log('User exist');
+
+
       res.status(200).send('User exist');
-    }  else {
+    } else {
       res.status(404).send('Not found');
     }
   }
