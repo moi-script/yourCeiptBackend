@@ -33,9 +33,10 @@ export const createUser = async (req, res) => {
       email,
       password: hashPassword
     });
-
-    const status = await delay(res);
-    status();
+  
+    // const status = await delay(res);
+    // status();
+    res.status(201).json({ message: 'account created successfully' });
 
   } catch (error) {
     console.log('There was an error creating an account');
@@ -44,19 +45,25 @@ export const createUser = async (req, res) => {
 };
 
 
-export const userAuth = async (loginEmail, password) => { // needed to parse the incomming request in userAuth
+export const userAuth = async (req, res) => { // needed to parse the incomming request in userAuth
+  console.log('User auth email :: ', req.body.email);
+  console.log('User auth password:: ', req.body.password);
 
-  const user = User.findOne({ email: loginEmail });
+  const user = await User.findOne({ email: req.body.email });
+
+  console.log("User result :: ", user);
   if (user.checkPassword) {
-    const isMatch = await user?.checkPassword(password);
+    const isMatch = await user.checkPassword(req.body.password);
     if (isMatch) {
       console.log('User exist');
-    } 
+      res.status(200).send('User exist');
+    }  else {
+      res.status(404).send('Not found');
+    }
   }
-  else console.log('Does not exist');
+  else res.status(500).send('Internal server error');
 
 }
-
 
 export const getAllUsers = async (req, res) => {
   try {

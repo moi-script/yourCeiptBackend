@@ -7,7 +7,7 @@ const config = {
     
     // Database Settings
     db: {
-        uri: process.env.NODE_ENV === 'development' ?  'mongodb://localhost:27017/user' : process.env.MONGO_URI,
+        uri: process.env.NODE_ENV === 'development' ?  'mongodb://localhost:27017/project' : process.env.MONGO_URI,
 
     },
     
