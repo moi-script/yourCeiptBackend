@@ -15,7 +15,7 @@ console.log('TYpes :: tranformLogin ::', typeof transformLogin);
 
 router.post('/register', createUser, generateTokenAndSetCookie, (req, res) => {
     
-    res.status(200).send('Succesfully created an account');
+    res.status(200).json({message : 'Account succefully created', status : 200});
 });
 
 
@@ -27,7 +27,7 @@ router.post('/login',  transformLogin,
     sanitized,
     userAuth,
     (req, res) => {
-        res.status(200).send('Hello world');
+        res.status(200).json({message : "Succesfully login", status : 200});
         console.log('After sanitation :: ', req.body);
 
     }

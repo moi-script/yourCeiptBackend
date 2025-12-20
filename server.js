@@ -5,12 +5,17 @@ import morgan from 'morgan';
 // import multer from 'multer';
 import  router  from './src/router/auth.js';
 import { connectDB } from './src/config/db.js';
-
+import 'dotenv/config';
 
 const app = express();
 
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000/user', // Specific frontend URL
+  credentials: true                // Allow cookies
+}));
+
+// does not working in cookies
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended : true}))
