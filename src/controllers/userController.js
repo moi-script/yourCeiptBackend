@@ -17,7 +17,6 @@ dotenv.config();
 
 export const createUser = async (req, res, next) => {
 
-
   console.log('Creating user :: ');
   const { nickname, fullname, email, password } = req.body;
 
@@ -49,7 +48,7 @@ export const createUser = async (req, res, next) => {
 };
 
 
-export const userAuth = async (req, res) => { // needed to parse the incomming request in userAuth
+export const userAuth = async (req, res, next) => { // needed to parse the incomming request in userAuth
   console.log('User auth email :: ', req.body.email);
   console.log('User auth password:: ', req.body.password);
 
@@ -60,16 +59,10 @@ export const userAuth = async (req, res) => { // needed to parse the incomming r
     const isMatch = await user.checkPassword(req.body.password);
     if (isMatch) {
 
-
-      // 
-      // res.send('Logged in');
-
-      console.log("Cookies token:: ", token);
-      console.log("Refresh Cookies token:: ", refreshToken);
-      console.log('User exist');
-
-
-      res.status(200).send('User exist');
+      // populate userId from db to passed for jwt
+      req.userId = user._id;
+      next();
+      
     } else {
       res.status(404).send('Not found');
     }

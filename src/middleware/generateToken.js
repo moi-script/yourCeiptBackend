@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export const generateTokenAndSetCookie = (req, res, next) => {
 
+    console.log(chalk.red('Generating token :: accessing user id :: ' + req.userId));
     const { userId } = req.body;
 
     const token = jwt.sign({userId}, process.env.JWT_SECRET_KEY, { expiresIn: '15m' });

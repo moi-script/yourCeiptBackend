@@ -20,7 +20,7 @@ export const verifyToken = async (req, res, next) => {
         console.log('Decoded object ::', decoded);
 
         try {
-            req.user = await User.find({});
+            req.user = await User.find({_id : decoded._id });
 
         } catch (err) {
             console.error('Unable to find in db..', err)

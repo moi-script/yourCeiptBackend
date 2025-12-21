@@ -8,6 +8,7 @@ import { userAuth } from '../controllers/userController.js';
 import rateLimit from 'express-rate-limit';
 import { generateTokenAndSetCookie } from '../middleware/generateToken.js';
 import { verifyToken } from '../middleware/verifyToken.js';
+import chalk from 'chalk';
 
 
 // rateLimit, for production test
@@ -26,7 +27,10 @@ router.post('/login',  transformLogin,
     validateUserInput().isPassLength(),
     sanitized,
     userAuth,
+    generateTokenAndSetCookie,
     (req, res) => {
+        console.log(chalk.blue('User login successfulyy ::', req.userId));
+        
         res.status(200).json({message : "Succesfully login", status : 200});
         console.log('After sanitation :: ', req.body);
     }
