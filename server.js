@@ -2,32 +2,43 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
-// import multer from 'multer';
+import multer from 'multer';
 import  router  from './src/router/auth.js';
 import { connectDB } from './src/config/db.js';
 import 'dotenv/config';
-
+import cookieParser from 'cookie-parser';
 const app = express();
 
 
 app.use(cors({
-  origin: 'http://localhost:3000/user', // Specific frontend URL
+  origin: 'http://localhost:5173', // Specific frontend URL
   credentials: true                // Allow cookies
 }));
 
-// does not working in cookies
+// app.use(cors());
+
+
+
+
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended : true}))
 app.use(helmet());
+app.use(cookieParser());
 // const upload = multer(); 
 
 await connectDB();
 
 app.use('/user', router);
-// app.use('/test', router);
 
 
+
+app.get('/user/register', (req, res) => {
+  console.log("Cookie exist :: ", req.cookies);
+
+  res.status(200).json({message : req.cookies.jwt, status : 200});
+})
 
 // app.post('/login', 
 //     (req, res) => {

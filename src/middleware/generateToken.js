@@ -1,16 +1,19 @@
+import chalk from 'chalk';
 import jwt from 'jsonwebtoken';
 
 
 export const generateTokenAndSetCookie = (req, res, next) => {
 
-    const {nickname, fullname, email} = req.body;
-    const token = jwt.sign({username: nickname, fullname : fullname, email : email }, process.env.JWT_SECRET_KEY, { expiresIn: '1m' });
-    const refreshToken = jwt.sign({ username: nickname, fullname : fullname, email : email }, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
+    const { userId } = req.body;
 
+    const token = jwt.sign({userId}, process.env.JWT_SECRET_KEY, { expiresIn: '15m' });
+    const refreshToken = jwt.sign({userId}, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
+    
     res.cookie('accessToken', token, {
         httpOnly: true, // Prevent XSS (JS cannot read this)
         sameSite: 'lax', // Protect against CSRF
-        secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
+        // secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
+        secure : false,
         maxAge: 15 * 60 * 1000
     });
 
@@ -18,7 +21,9 @@ export const generateTokenAndSetCookie = (req, res, next) => {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         sameSite: 'lax', // Protect against CSRF
-        secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
+        // secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
+        secure : false,
+
         maxAge: 15 * 60 * 1000
     });
     console.log('Cookie access ::', token);

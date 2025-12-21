@@ -7,8 +7,8 @@ import { sanitized } from '../middleware/validator.js';
 import { userAuth } from '../controllers/userController.js';
 import rateLimit from 'express-rate-limit';
 import { generateTokenAndSetCookie } from '../middleware/generateToken.js';
+import { verifyToken } from '../middleware/verifyToken.js';
 
-console.log('TYpes :: tranformLogin ::', typeof transformLogin);
 
 // rateLimit, for production test
 
@@ -29,13 +29,8 @@ router.post('/login',  transformLogin,
     (req, res) => {
         res.status(200).json({message : "Succesfully login", status : 200});
         console.log('After sanitation :: ', req.body);
-
     }
 )
-
-
-
-
 
 
 router.get('/refreshToken', async (req, res) => {
@@ -59,6 +54,15 @@ router.get('/refreshToken', async (req, res) => {
 
 
 
+// A simple route that just returns user info if the token/cookie is valid
+router.get('/verify', verifyToken, (req, res) => {
+    // If the middleware passes, req.user should be populated
+    res.status(200).json({ 
+        status: 200, 
+        user: req.user, 
+        message: "Session valid" 
+    });
+});
 
 
 
