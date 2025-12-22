@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "axios": "^1.13.2",
+    "@openrouter/sdk": "^0.1.27",
     "bcryptjs": "^3.0.3",
     "chalk": "^5.6.2",
     "compression": "^1.8.1",
@@ -15,7 +15,9 @@
     "mongo-sanitize": "^1.1.0",
     "mongoose": "^9.0.1",
     "morgan": "^1.10.1",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "scribe.js-ocr": "^0.9.3",
+    "tesseract.js": "^6.0.1"
   },
   "name": "backend",
   "version": "1.0.0",
