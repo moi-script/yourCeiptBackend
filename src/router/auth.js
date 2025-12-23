@@ -19,7 +19,6 @@ router.post('/register', createUser, generateTokenAndSetCookie, (req, res) => {
     res.status(200).json({message : 'Account succefully created', status : 200});
 });
 
-
 router.post('/login',  transformLogin,
     // body('email').isEmail(),
     // body('password').isLength({ min: 5 }),

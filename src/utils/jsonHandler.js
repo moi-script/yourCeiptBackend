@@ -1,23 +1,16 @@
 
 // matching for a json starts with _ and ends with _
+
 export function jsonToObjOutput(data) {
-
-    const regex = /_\s*(\{[\s\S]*?\})\s*_/;
-
-    // const match = data.match(regex);
-    // if(!match) {
-    //     return null
-    // }
-    //     return JSON.parse(match[1]);
-
-
-    return data.map(result => {
-    const match = result.match(regex);
-        if(match){
-            const jsonStr = match[1];
-            return JSON.parse(jsonStr);
-        }
+  if (data.length > 1 && typeof data === 'object') {
+   return data.map(obj => {
+      const jsonMatch = obj.match(/\{[\s\S]*\}/);
+      return jsonMatch ? JSON.parse(jsonMatch[0]) : null;
     })
+  }
+  const jsonMatch = data.pop().match(/\{[\s\S]*\}/);
+  return jsonMatch ? JSON.parse(jsonMatch[0]) : null
+
 }
 
 export const processItems = (data) => {

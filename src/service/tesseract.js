@@ -4,21 +4,37 @@ import { parentPort } from 'node:worker_threads';
 // import { getUrl } from '../middleware/source.js';
 import { getUrl } from '../utils/getKey.js';
 import { createWorker } from 'tesseract.js';
+import chalk from 'chalk';
 
 
+parentPort.on('message', async (msg) => {
 
+    // const worker = await createWorker('eng');
 
-parentPort.on('message', async (msg) => { 
-    console.log('Message from the parent :: ', msg.status, msg.path);
+    const worker = await createWorker('eng', 1, {
+        logger: m => { } // Empty function silences the progress logs
+    });
 
-    const worker = await createWorker('eng');
+    await worker.setParameters({
+        tessedit_pageseg_mode: '3',
+    });
     const ret = await worker.recognize(getUrl(msg));
     await worker.terminate();
 
-    parentPort.postMessage({worker : 'tesseract', data : ret.data.text});
+    parentPort.postMessage({ worker: 'tesseract', data: ret.data.text });
 
 })
 
+
+
+//  async function getTextByTesseract() {
+//     const worker = await createWorker('eng');
+//     const ret = await worker.recognize(`http://localhost:3000/uploads/waltermart.png`);
+//     await worker.terminate();
+//     return ret.data.text;
+// }
+
+// console.log('Tesseract result :: ', await getTextByTesseract());
 
 
 

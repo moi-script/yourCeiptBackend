@@ -1,6 +1,6 @@
 import scribe from 'scribe.js-ocr';
 import path from 'path';
-import { getFileList } from '../parseImage/util.js';
+// import { getFileList } from '../parseImage/util.js';
 import { parentPort } from 'node:worker_threads';
 
 // import { getServerPort, getUrl } from '../middleware/source.js';
@@ -9,7 +9,7 @@ import chalk from 'chalk';
 
 
 parentPort.on('message', async (msg) => {
-    console.log('Message from the parent :: ', msg.status, msg.path);
+    // console.log('Message from the parent :: ', msg.status, msg.path);
 
     try {
         const res = await scribe.extractText([getUrl(msg)]);

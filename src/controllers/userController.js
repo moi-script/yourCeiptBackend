@@ -28,7 +28,7 @@ export const createUser = async (req, res, next) => {
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(password, salt);
   try {
-    console.log('User id :: ', req.userId);
+    // console.log('User id :: ', req.userId);
     const newUser = await User.create({
       nickname,
       fullname,
@@ -36,7 +36,7 @@ export const createUser = async (req, res, next) => {
       password: hashPassword
     });
 
-    req.userId = newUser.id;
+    req.userId = newUser._id;
     next();
     // const status = await delay(res);
     // status();
@@ -54,7 +54,7 @@ export const userAuth = async (req, res, next) => { // needed to parse the incom
 
   const user = await User.findOne({ email: req.body.email });
 
-  console.log("User result :: ", user);
+  // console.log("User result :: ", user);
   if (user.checkPassword) {
     const isMatch = await user.checkPassword(req.body.password);
     if (isMatch) {

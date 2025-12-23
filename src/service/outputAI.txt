@@ -1,1 +1,56 @@
-Hello! 😊 I'm just a bunch of code, so I don't have feelings, but I'm here and ready to help you with anything you need! How about you—how's your day going? What can I assist you with today? 💡
+_{"store":"SUPERMARKET","slogan":null,"contact":null,"manager":null,"address":{"street":"465 S Arroyo Pkwy","city":"Pasadena","state":"CA","zip":"91105"},"transaction":{"store_number":"204650","operator_number":"1409","terminal_number":"001","transaction_number":"140987"},"items":[{"description":"1 DOZ FREE RANGE EGG","upc":null,"type":null,"price":"3.89","quantity":"1"},{"description":"GV ORGANIC MILK 2%","upc":null,"type":null,"price":"4.19","quantity":"1"},{"description":"SBUX FRENCH ROAST WL","upc":null,"type":null,"price":"8.99","quantity":"1"}],"subtotal":"17.07","tax_rate":null,"tax_amount":null,"total":"17.07","payment_method":"VISA DEBIT","amount_paid":"17.07","metadata":{"currency":"USD","datetime":"2019-11-21T13:28:00","notes":null,"source_type":"text"}}__
+{
+  "store": "Walmart",
+  "slogan": "Save money. Live better.",
+  "contact": "(813)6854-3261",
+  "manager": "BRAD AUSDEMORE",
+  "address": {
+    "street": "3801 TAMPA RD",
+    "city": "OLDSHAR",
+    "state": "FL",
+    "zip": "34677"
+  },
+  "transaction": {
+    "store_number": "2796",
+    "operator_number": "00004726",
+    "terminal_number": "08",
+    "transaction_number": "04049"
+  },
+  "items": [
+    {"description": "GV 1 LF HLK", "upc": "007874235188", "type": null, "price": "3.68", "quantity": null},
+    {"description": "GV UNS TER", "upc": "007874200705", "type": null, "price": "2.28", "quantity": null},
+    {"description": "SIMPLY LEMON", "upc": "002500005426", "type": null, "price": "2.50", "quantity_____________
+{"":store "1":"OTARGET"},
+    {"","slogan":null,"description": "TCcontact FETA CR":UM", "null,"upmanagerc":":null ","007address015788864":{"street":", "null,"type": nullcity":"Green, "price": "1.58", "quantity":Wood null},
+    {"description": "EDAMANE", "upc": "071157500373", "type": City"," nullstate":",CA "","zip":"343price":43-343343"},"transaction":{"store_number":null,"operator_number":null,"terminal_number":"352-663 "-2321.18","",transaction_number":" "quantity": null},
+    {"2description": "TERDERLOIN", "upc": "004222231973", "type": null, "price": "6.98", "quantity": null},
+    {"description": "OAT SQR", "upc": "003000031757",-6965-353 "type": null0-, "price": "3.9288-3901-2"},"items":[{"description":"BIG 42 Inch LED TV","upc":"7053275","type":"ELECTRONICS","price":533.89,"quantity":null},{"description":"DISCOUNT COUPON","upc":null,"type":null,"price":-50.00,"quantity":null},{"description":"Bluetooth F","upc":"5599903","type":"ELECTRONICS","price":29.99,"quantity":null},{"description":"Dave Shanpoo","upc":"1542666","type":"HEALTH AND BEAUTY","price":12.98,"quantity":null},{"description":"Dave Conditioner","upc":"5044148","type":"HEALTH AND BEAUTY","price":8.99,"quantity":null}],"subtotal":535.85,"tax_rate":9.75,"tax_amount":49.89,"total":585.74,"payment_method":"VISA","amount_paid":585.74,"metadata":{"currency":"USD","datetime":"2021-08-19T17:32:29","notes":null,"source_type":"text"}}
+_____________00", "quantity": null},
+    {"description": "GV CEREAL", "upc": "007874207574", "type": null, "price": "2.42", "quantity": null},
+    {"description": "GV CEREAL", "upc": "007874214098", "type": null, "price": "1.98", "quantity": null},
+    {"description": "MAHATMA JASH", "upc": "001740010695", "type": null, "price": "2.50", "quantity": null},
+    {"description": "E883", "upc": "060538871457", "type": null, "price": "1.88", "quantity": "8"},
+    {"description": "88E00", "upc": "007341013835", "type": null, "price": "2.48", "quantity": null},
+    {"description": "BROC CROWNS", "upc": "000000003082KI", "type": null, "price": "1.94", "quantity": null},
+    {"description": "CUCUMBER", "upc": "000000004062K1", "type": null, "price": "0.78", "quantity": null},
+    {"description": "BELL PEPPER", "upc": "000000004065KI", "type": null, "price": "0.78", "quantity": null},
+    {"description": "ZUCCHINI", "upc": "000000004067K1", "type": null, "price": "0.62", "quantity": null},
+    {"description": "BANANAS", "upc": "000000004011KI", "type": null, "price": "0.43", "quantity": null},
+    {"description": "CILANTRO", "upc": "000000004889KF", "type": null, "price": "0.98", "quantity": null},
+    {"description": "SPICY HUMMUS", "upc": "004082201144", "type": null, "price": "2.98", "quantity": null},
+    {"description": "BLUEBERRIES", "upc": "081204900626", "type": null, "price": "3.98", "quantity": null}
+  ],
+  "subtotal": "45.95",
+  "tax_rate": "7.000",
+  "tax_amount": "0.18",
+  "total": "46.13",
+  "payment_method": "VISA",
+  "amount_paid": "46.13",
+  "metadata": {
+    "currency": "$",
+    "datetime": null,
+_( {"store":"FARMEEZ","slogan":null,"contact":null,"manager":null,"address":{"street":"16-28, Cross Road","city":"Pasadena","state":"CA","zip":"91105"},"transaction":{"store_number":"2977979","operator_number":null,"terminal_number":"006","transaction_number":"932646"},"items":[{"description":"EGGS","upc":null,"type":null,"price":5.99,"quantity":1},{"description":"MILK","upc":null,"type":null,"price":4.99,"quantity    "notes":":2 null},{"description":"TO,
+    "ASTsource","up_typec":": "nulltext,""
+  }
+}
+type":null,"price_":8.99,"quantity":1}],"subtotal":19.88,"tax_rate":null,"tax_amount":null,"total":19.88,"payment_method":"VISA","amount_paid":19.88,"metadata":{"currency":"USD","datetime":"2020-10-07T17:31:00","notes":null,"source_type":"text"}} )_

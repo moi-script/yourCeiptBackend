@@ -7,10 +7,12 @@ import  router  from './src/router/auth.js';
 import files from './src/router/upload.js';
 import { connectDB } from './src/config/db.js';
 import chalk from 'chalk';
-import 'dotenv/config';
+import trigger from './src/router/trigger.js';
+import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+// import mongoSanitize from 'express-mongo-sanitize';
 const app = express();
-
+dotenv.config({ quiet: true });
 
 app.use(cors({
   origin: 'http://localhost:5173', // Specific frontend URL
@@ -19,25 +21,24 @@ app.use(cors({
 
 // app.use(cors());
 
-
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended : true}))
 app.use(helmet());
 app.use(cookieParser());
+// app.use(mongoSanitize())
 // const upload = multer(); 
 
 await connectDB();
 
+// for user auth or validation
 app.use('/user', router);
+
+// accepts uploading data input
 app.use('/', files);
 
-
-// // import { imgHandler } from './src/router/upload.js';
-// app.use('/', imgHandler, (req, res) => {
-//   console.log('Done');
-// })
-
+// processing text extraction features
+app.use('/extract', trigger);
 
 
 app.get('/user/register', (req, res) => {

@@ -36,13 +36,26 @@ function promiseWorker(result, filePath, urlPath) {
                 result.scribe.isDone = true;
             }
 
+            worker.terminate();
             acc(true);
 
         })
         worker.on("error", (err) => {
-            rej(err);
+            worker.terminate();
             console.error("Worker error:", err);
+            rej(err);
+
         });
+
+        worker.on('exit', code =>{
+            // if(code !== 0 && (result.scribe.isDone === result.tesseract.isDone)) {
+            //     console.error(`Crashed :: ${urlPath} code - ${code}`);
+            // } 
+            if(code === 0) {
+                console.log('Finish normally');
+            }
+        }) 
+        
         worker.postMessage({ status: 'Starting the ' + filePath, path: urlPath });
 
     })

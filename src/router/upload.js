@@ -3,7 +3,7 @@
 import chalk from 'chalk';
 import express from 'express';
 import multer from 'multer';
-import path, { dirname} from 'path';
+import path, { dirname } from 'path';
 import fs from 'fs';
 const files = express.Router();
 import uploadDir from '../../uploads/uploadDir.js';
@@ -14,22 +14,35 @@ const storage = multer.diskStorage({
         // 'uploads/' is the folder name. Ensure this folder exists!
         cb(null, 'uploads/');
     },
+    limits: { fileSize: 2000000 },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an image file (jpg, jpeg, or png)'));
+        }
+        cb(undefined, true);
+    },
+
     filename: (req, file, cb) => {
 
         // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + path.parse(file.originalname).ext); // + '-' + uniqueSuffix + path.extname(file.originalname)
+        cb(null, Date.now() + '-' + file.originalname.replaceAll(" ", ""));// + '-' + uniqueSuffix + path.extname(file.originalname)
     }
 });
 
+// 1766464398436-Screenshot 2025-12-16 220838
+// 1766464301325-Screenshot 2025-12-16 220838
+// 1766464774997-Screenshot2025-12-16220838
+
 const upload = multer({ storage: storage });
 
-files.post('/upload', upload.single('myImage'), (req, res) => {
+files.post('/upload', upload.array('myImages'), (req, res) => {
     console.log('Handling uploads');
     try {
 
-        console.log(req.file);
-
-        res.send(`File uploaded successfully! Path: ${req.file.path}`);
+        console.log(req.files);
+        
+        const filePath = req.files.map(file => file.path);
+        res.send(`File uploaded successfully! Path: ${filePath}`);
     } catch (error) {
         res.status(400).send('Error uploading file');
     }
@@ -41,7 +54,7 @@ files.post('/upload', upload.single('myImage'), (req, res) => {
 // 2. Your custom Image Handler
 export const imgHandler = (req, res) => {
 
-    console.log(chalk.green("Upload dir :: ", uploadDir));
+    // console.log(chalk.green("Upload dir :: ", uploadDir));
     const filename = req.params.filename; // Gets "image.jpg" from the URL
     const filePath = path.join(uploadDir, filename);
 
@@ -53,15 +66,12 @@ export const imgHandler = (req, res) => {
     // Check if file actually exists
     if (fs.existsSync(filePath)) {
         // Serve the file (or do your custom logic here)
-        console.log('File existed');
+        // console.log('File existed');
         res.sendFile(filePath);
     } else {
         res.status(404).send('File not found');
     }
 };
-
-// 3. The Route Definition
-// This replaces your entire loop. It matches /uploads/ANYTHING
 
 
 
