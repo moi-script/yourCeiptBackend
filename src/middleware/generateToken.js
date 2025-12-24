@@ -5,10 +5,10 @@ import jwt from 'jsonwebtoken';
 export const generateTokenAndSetCookie = (req, res, next) => {
 
     console.log(chalk.red('Generating token :: accessing user id :: ' + req.userId));
-    const { userId } = req.body;
 
-    const token = jwt.sign({userId}, process.env.JWT_SECRET_KEY, { expiresIn: '15m' });
-    const refreshToken = jwt.sign({userId}, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
+
+    const token = jwt.sign({userId : req.userId}, process.env.JWT_SECRET_KEY, { expiresIn: '15m' });
+    const refreshToken = jwt.sign({userId : req.userId}, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
     
     res.cookie('accessToken', token, {
         httpOnly: true, // Prevent XSS (JS cannot read this)

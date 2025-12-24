@@ -29,9 +29,8 @@ router.post('/login',  transformLogin,
     generateTokenAndSetCookie,
     (req, res) => {
         console.log(chalk.blue('User login successfulyy ::', req.userId));
-        
-        res.status(200).json({message : "Succesfully login", status : 200});
-        console.log('After sanitation :: ', req.body);
+        res.status(200).json({message : "Succesfully login", status : 200, _id : req.userId});
+        // console.log('After sanitation :: ', req.body);
     }
 )
 
@@ -54,7 +53,6 @@ router.get('/refreshToken', async (req, res) => {
         res.send('Access token refreshed');
     })
 })
-
 
 
 // A simple route that just returns user info if the token/cookie is valid

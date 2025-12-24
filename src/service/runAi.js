@@ -8,15 +8,6 @@ import { runParallelWorkers } from "../middleware/workers.js";
 // import { allInputPrompts, aiPrompt } from "./aiPrompts.js";
 import { jsonToObjOutput, allInputPrompts, aiPrompt } from "../utils/jsonHandler.js";
 import { getAiKey, filterDirlist } from "../utils/getKey.js";
-// import { time } from '../parseImage/util.js';
-import { time } from "../utils/time.js";
-import chalk from "chalk";
-import uploadDir from "../../uploads/uploadDir.js";
-
-
-// for image/ocr 
-
-
 
 // test output txt for ai response 
 const aiOutput = createWriteStream('./outputAI.txt');

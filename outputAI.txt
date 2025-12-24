@@ -1,0 +1,3 @@
+```json
+_{"store":"FARMEEZ","slogan":null,"contact":null,"manager":null,"address":{"street":"16-28, Cross Road","city":"Pasadena","state":"CA","zip":"91105"},"transaction":{"store_number":"2977979","operator_number":"TED","terminal_number":"006","transaction_number":"932646"},"items":[{"description":"EGGS","upc":null,"type":null,"price":5.99,"quantity":1},{"description":"MILK","upc":null,"type":null,"price":4.9,"quantity":2},{"description":"TOAST","upc":null,"type":null,"price":8.99,"quantity":1}],"subtotal":19.88,"tax_rate":null,"tax_amount":null,"total":19.88,"payment_method":"VISA","amount_paid":19.88,"metadata":{"currency":"$","datetime":"10/07/2020 05:31 PM","notes":null,"source_type":"text"}}_
+```

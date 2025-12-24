@@ -6,8 +6,13 @@ import multer from 'multer';
 import path, { dirname } from 'path';
 import fs from 'fs';
 const files = express.Router();
-import uploadDir from '../../uploads/uploadDir.js';
+// import uploadDir from '../../uploads/uploadDir.js';
+import uploadDir from '../utils/uploadDir.js';
 // const app = express();
+
+
+// console.log("File list :: ", fs.readdirSync('../../uploads/'));
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

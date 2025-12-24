@@ -1,15 +1,31 @@
+
+// packages
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 import multer from 'multer';
-import  router  from './src/router/auth.js';
-import files from './src/router/upload.js';
-import { connectDB } from './src/config/db.js';
-import chalk from 'chalk';
 import trigger from './src/router/trigger.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+
+// routes
+import  router  from './src/router/auth.js';
+import files from './src/router/upload.js';
+import receipt from './src/router/receipts.js';
+
+
+
+// path
+
+import uploadDir from './src/utils/uploadDir.js';
+
+// db
+import { connectDB } from './src/config/db.js';
+import chalk from 'chalk';
+import { clearFolder } from './src/utils/getKey.js';
+
+
 // import mongoSanitize from 'express-mongo-sanitize';
 const app = express();
 dotenv.config({ quiet: true });
@@ -39,7 +55,8 @@ app.use('/', files);
 
 // processing text extraction features
 app.use('/extract', trigger);
-
+app.use('/receipt', receipt);
+// receipt/upload
 
 app.get('/user/register', (req, res) => {
   console.log("Cookie exist :: ", req.cookies);
@@ -60,3 +77,11 @@ app.get('/user/register', (req, res) => {
 
 
 app.listen(process.env.PORT, () => console.log('Server is running at port :: ' + process.env.PORT));
+
+
+process.on('SIGINT', async () => {
+  console.log(chalk.red("Closing the server down"));
+  console.log(chalk.red('Clearing uploads memory '));
+  clearFolder(uploadDir);
+  process.exit(0);
+})

@@ -1,5 +1,8 @@
 import { readParrallelAi, readOcrResponseTask, runParallelOcrTask} from "../service/runAi.js";
-import uploadDir from "../../uploads/uploadDir.js";
+// import uploadDir from "../../uploads/uploadDir.js";
+import uploadDir from "../utils/uploadDir.js";
+// const uploadDir = '../../uploads/';
+
 import { filterDirlist } from "../utils/getKey.js";
 import { jsonToObjOutput } from "../utils/jsonHandler.js";
 import chalk from "chalk";
