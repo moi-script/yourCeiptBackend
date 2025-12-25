@@ -15,6 +15,4 @@ receipt.post('/uploadManual', createManual, (req, res) => {
 })
 
 
-
-
 export default receipt;

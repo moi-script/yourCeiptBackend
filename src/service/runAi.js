@@ -8,6 +8,7 @@ import { runParallelWorkers } from "../middleware/workers.js";
 // import { allInputPrompts, aiPrompt } from "./aiPrompts.js";
 import { jsonToObjOutput, allInputPrompts, aiPrompt } from "../utils/jsonHandler.js";
 import { getAiKey, filterDirlist } from "../utils/getKey.js";
+import chalk from "chalk";
 
 // test output txt for ai response 
 const aiOutput = createWriteStream('./outputAI.txt');
@@ -20,11 +21,19 @@ function readTextAi(prompts) {
         const openrouter = new OpenRouter({
             apiKey: getAiKey()
         });
+
         // tngtech/deepseek-r1t2-chimera:free
         // z-ai/glm-4.5-air:free
         // kwaipilot/kat-coder-pro:free
+        // google/gemini-2.0-flash-exp:free
+        // meta-llama/llama-3.2-3b-instruct:free
+        // google/gemma-3-27b-it:free
+        // meta-llama/llama-3.2-11b-vision-instruct:free
+        // microsoft/phi-3-medium-128k-instruct:free
+
+
         const stream = await openrouter.chat.send({
-            model: "tngtech/deepseek-r1t2-chimera:free",
+            model: "kwaipilot/kat-coder-pro:free",
             user: 'test',
             messages: [
                 {
@@ -78,12 +87,25 @@ export function readOcrResponseTask(response) {
             const { scribe, tesseract } = response[i];
             return aiPrompt(scribe.data, tesseract.data);
         })
-        acc(prompList);
+        acc(prompList); 
     })
 }
 
+
+export function descriptionWithPrompt(description) {
+    const prompt =  aiPrompt(description);
+    console.log(chalk.blue('Prompt --> ', prompt));
+    return prompt;
+}
+
+export async function readDescriptionAi(prompt) {
+    const readingText = readTextAi(descriptionWithPrompt(prompt));
+    return await readingText();
+}
 // get the iterable promp list with a parse text 
 // const iterablePromptList = await readOcrResponseTask(responseObject); // turn on later
+
+
 
 
 

@@ -8,6 +8,12 @@ export function jsonToObjOutput(data) {
       return jsonMatch ? JSON.parse(jsonMatch[0]) : null;
     })
   }
+  if(typeof data === 'string' ){
+    console.log('Data ::', data);
+  const jsonMatch = data.match(/\{[\s\S]*\}/);
+  return jsonMatch ? JSON.parse(jsonMatch[0]) : null
+
+  }
   const jsonMatch = data.pop().match(/\{[\s\S]*\}/);
   return jsonMatch ? JSON.parse(jsonMatch[0]) : null
 
@@ -42,7 +48,7 @@ export const processItems = (data) => {
   //       12. JSon should be json(object, null, 2)
 
   
-export function aiPrompt(scribe, tesseract) {
+export function aiPrompt(scribe, tesseract = "") {
     const format = {
         "store": null,
         "slogan": null,

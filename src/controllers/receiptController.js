@@ -1,29 +1,62 @@
+import ora from "ora";
 import Receipt from "../models/Receipt.js";
+
+
+const savedReceipt = async (userId, receipts) => {
+
+  const newReceipt = new Receipt({
+    ...receipts,
+    userId: userId
+  });
+
+  const saved = await newReceipt.save();
+  return saved
+}
 
 export const createReceipt = async (req, res, next) => {
 
-    console.log('Req body :: ', req.body);
-    const {userId, ...receipts } = req.body;
+  console.log('Req body :: ', req.body);
+  const { userId, ...receipts } = req.body;
   try {
     // const receiptJson = req.body;    
     // const authenticatedUserId = req.userId;
-    
-    if(!req.body) throw new Error('No receipt object');
+
+    if (!req.body) throw new Error('No receipt object');
 
     console.log("Reciept upload call ::", receipts);
     console.log("User id upload call ::", userId);
 
-    const newReceipt = new Receipt({
-      ...receipts,     
-      userId: userId 
-    });
+    const upload = await savedReceipt(userId, receipts);
 
-    const savedReceipt = await newReceipt.save();
-
-    req.saved = savedReceipt;
+    req.saved = upload;
     next();
   } catch (error) {
     console.error("Save Error:", error);
     res.status(500).json({ message: "Failed to save receipt" });
   }
 };
+
+
+
+export const uploadParseText = async (req, res, next) => {
+  const {userId} = req.body;
+  try {
+    const upload = await savedReceipt(userId, req.output);
+    req.saved = upload;
+    next();
+  } catch(err) {
+    console.error('Unable to upload to db');
+
+    
+
+  }
+}
+
+
+
+
+
+
+// export const  uploadReceiptByDescription = async(req, res, next) => {
+//   const
+// } 
