@@ -53,9 +53,9 @@ export const createUser = async (req, res, next) => {
 export const getUserReceipts = async (req, res, next) => {
   const { userId } = req.body;
 
-  console.log("User id :: ", userId);
+  // console.log("User id :: ", userId);
   const receipts = await Receipt.find({ userId : userId});
-  console.log('Receipts :: ', receipts);
+  // console.log('Receipts :: ', receipts);
   req.receipts = receipts;
   next();
 }
@@ -65,9 +65,9 @@ export const getUserReceipts = async (req, res, next) => {
 export const getUserManualReceipts = async (req, res, next) => {
   const { userId } = req.body;
 
-  console.log("User id :: ", userId);
+  // console.log("User id :: ", userId);
   const receipts = await Manual.find({ userId : userId});
-  console.log('Receipts :: ', receipts);
+  // console.log('Receipts :: ', receipts);
   req.receipts.push(receipts);
   next();
 }
@@ -87,10 +87,12 @@ export const userAuth = async (req, res, next) => { // needed to parse the incom
 
       // populate userId from db to passed for jwt
       req.userId = user._id;
+      req.user = await User.findOne({_id : user._id }).select('fullname nickname email _id').lean();
+      console.log('Req user for user auth ::', req.user);
       next();
       
     } else {
-      res.status(404).send('Not found');
+      res.status(404).json({message : 'Invalid email or password', status : 404});
     }
   }
   else res.status(500).send('Internal server error');

@@ -33,9 +33,9 @@ export async function extractText(req, res, next) {
             console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
 
             if (!dataOutput ||  (Array.isArray(dataOutput) && dataOutput.length === 0)){
-                console.log('!dataOutput :', !dataOutput);
-                console.log('!jsonToObjOutput :', !(typeof jsonToObjOutput(dataOutput)));
-                console.log('!dataOutput?.length :', dataOutput?.length < 1);
+                // console.log('!dataOutput :', !dataOutput);
+                // console.log('!jsonToObjOutput :', !(typeof jsonToObjOutput(dataOutput)));
+                // console.log('!dataOutput?.length :', dataOutput?.length < 1);
 
                  throw Error('Null value');
             }
@@ -43,7 +43,7 @@ export async function extractText(req, res, next) {
             try {
                 spinner.color = 'yellow';
                 spinner.text = 'Finalizing object';
-                console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
+                // console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
                 const toObjectParse = jsonToObjOutput(dataOutput);
                 req.extractedText = toObjectParse;
                 spinner.color = 'green';

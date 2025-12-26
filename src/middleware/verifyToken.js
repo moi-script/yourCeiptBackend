@@ -17,7 +17,7 @@ export const verifyToken = async (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-        console.log('Decoded object ::', decoded);
+        // console.log('Decoded object ::', decoded);
 
         try {
             req.user = await User.findOne({_id : decoded.userId }).select('fullname nickname email _id');

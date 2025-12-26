@@ -27,7 +27,7 @@ trigger.post('/uploadQuick', uploadParseText, (req, res) => {
 
 
 trigger.get('/getModels', getAiModels, (req ,res) => {
-    console.log('Model list :: ', req.models);
+    // console.log('Model list :: ', req.models);
 
     res.status(200).json({models : req.models});
 } )

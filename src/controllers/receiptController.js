@@ -15,7 +15,7 @@ const savedReceipt = async (userId, receipts) => {
 
 export const createReceipt = async (req, res, next) => {
 
-  console.log('Req body :: ', req.body);
+  // console.log('Req body :: ', req.body);
   const { userId, ...receipts } = req.body;
   try {
     // const receiptJson = req.body;    
@@ -23,8 +23,8 @@ export const createReceipt = async (req, res, next) => {
 
     if (!req.body) throw new Error('No receipt object');
 
-    console.log("Reciept upload call ::", receipts);
-    console.log("User id upload call ::", userId);
+    // console.log("Reciept upload call ::", receipts);
+    // console.log("User id upload call ::", userId);
 
     const upload = await savedReceipt(userId, receipts);
 
@@ -40,7 +40,7 @@ export const createReceipt = async (req, res, next) => {
 
 export const uploadParseText = async (req, res, next) => {
   const {userId} = req.body;
-  console.log('Checking upload input ::', req.body.quickText);
+  // console.log('Checking upload input ::', req.body.quickText);
   try {
     const upload = await savedReceipt(userId, req.body.quickText);
     req.output = req.body.quickText;

@@ -29,7 +29,8 @@ router.post('/login',  transformLogin,
     generateTokenAndSetCookie,
     (req, res) => {
         console.log(chalk.blue('User login successfulyy ::', req.userId));
-        res.status(200).json({message : "Succesfully login", status : 200, _id : req.userId});
+        console.log(('Login logggss', {...req.user}));
+        res.status(200).json({message : "Succesfully login", status : 200, _id : req.userId, ...req.user});
         // console.log('After sanitation :: ', req.body);
     }
 )
@@ -73,6 +74,24 @@ router.post('/receipts', getUserReceipts, getUserManualReceipts, (req, res) => {
 
     }, 800);
 })
+
+router.post('/logout', (req, res) => {
+    // Clear the cookie named 'token' (or whatever you named your JWT cookie)
+    res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: false, 
+        path: '/',
+        sameSite: 'lax' 
+    });
+     res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: false, 
+        path: '/',
+        sameSite: 'lax' 
+    });
+    
+    return res.status(200).json({ message: 'Logged out successfully' });
+});
 
 // router.post('/manualresceipt', getUserManualReceipts, (req, res) => {
 //     res.status(200).json({success : true, contents : req.receipts})

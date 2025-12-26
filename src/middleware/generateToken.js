@@ -15,6 +15,7 @@ export const generateTokenAndSetCookie = (req, res, next) => {
         sameSite: 'lax', // Protect against CSRF
         // secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
         secure : false,
+        path : '/',
         maxAge: 60 * 60 * 1000 // 1hr
     });
 
@@ -24,7 +25,8 @@ export const generateTokenAndSetCookie = (req, res, next) => {
         sameSite: 'lax', // Protect against CSRF
         // secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
         secure : false,
-        
+        path : '/',
+
         maxAge: 60 * 60 * 1000 // 1hr
     });
     console.log('Cookie access ::', token);

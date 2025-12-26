@@ -191,7 +191,7 @@ export async function getFastFreeModel(apiKey) {
     } 
   });
 
-  console.log('Formatted data :: ', formattedData);
+  // console.log('Formatted data :: ', formattedData);
 
   return formattedData.sort((a, b) => {
     if (a.status === 'active' && b.status !== 'active') return -1;

@@ -3,14 +3,14 @@ import Manual from "../models/Manual.js";
 
 
 export const createManual = async (req, res, next) => {
-        console.log('Req body :: ', req.body);
+        // console.log('Req body :: ', req.body);
         const {userId, ...receipts } = req.body;
       try {
 
         if(!req.body) throw new Error('No receipt object');
     
-        console.log("Reciept upload call ::", receipts);
-        console.log("User id upload call ::", userId);
+        // console.log("Reciept upload call ::", receipts);
+        // console.log("User id upload call ::", userId);
     
         const newManualReceipt = new Manual({
           ...receipts,     
