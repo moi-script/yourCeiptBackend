@@ -1,4 +1,6 @@
 import User from '../models/User.js'; // Import the model to talk to the DB
+import Receipt from '../models/Receipt.js';
+import Manual from '../models/Manual.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -48,6 +50,30 @@ export const createUser = async (req, res, next) => {
 };
 
 
+export const getUserReceipts = async (req, res, next) => {
+  const { userId } = req.body;
+
+  console.log("User id :: ", userId);
+  const receipts = await Receipt.find({ userId : userId});
+  console.log('Receipts :: ', receipts);
+  req.receipts = receipts;
+  next();
+}
+
+
+
+export const getUserManualReceipts = async (req, res, next) => {
+  const { userId } = req.body;
+
+  console.log("User id :: ", userId);
+  const receipts = await Manual.find({ userId : userId});
+  console.log('Receipts :: ', receipts);
+  req.receipts.push(receipts);
+  next();
+}
+
+
+
 export const userAuth = async (req, res, next) => { // needed to parse the incomming request in userAuth
   console.log('User auth email :: ', req.body.email);
   console.log('User auth password:: ', req.body.password);
@@ -70,6 +96,12 @@ export const userAuth = async (req, res, next) => { // needed to parse the incom
   else res.status(500).send('Internal server error');
 
 }
+
+
+
+
+
+
 
 export const getAllUsers = async (req, res) => {
   try {

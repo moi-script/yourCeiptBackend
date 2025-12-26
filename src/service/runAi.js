@@ -10,30 +10,23 @@ import { jsonToObjOutput, allInputPrompts, aiPrompt } from "../utils/jsonHandler
 import { getAiKey, filterDirlist } from "../utils/getKey.js";
 import chalk from "chalk";
 
+
+// get ai key env
+const AI_KEY = getAiKey();
 // test output txt for ai response 
 const aiOutput = createWriteStream('./outputAI.txt');
 
+
 function readTextAi(prompts) {
-    // console.log(chalk.green('Ai processing...'))
     let body = '';
     return async function () {
 
         const openrouter = new OpenRouter({
-            apiKey: getAiKey()
+            apiKey: AI_KEY
         });
 
-        // tngtech/deepseek-r1t2-chimera:free
-        // z-ai/glm-4.5-air:free
-        // kwaipilot/kat-coder-pro:free
-        // google/gemini-2.0-flash-exp:free
-        // meta-llama/llama-3.2-3b-instruct:free
-        // google/gemma-3-27b-it:free
-        // meta-llama/llama-3.2-11b-vision-instruct:free
-        // microsoft/phi-3-medium-128k-instruct:free
-
-
         const stream = await openrouter.chat.send({
-            model: "kwaipilot/kat-coder-pro:free",
+            model: "xiaomi/mimo-v2-flash:free",
             user: 'test',
             messages: [
                 {

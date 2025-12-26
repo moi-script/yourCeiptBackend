@@ -40,8 +40,10 @@ export const createReceipt = async (req, res, next) => {
 
 export const uploadParseText = async (req, res, next) => {
   const {userId} = req.body;
+  console.log('Checking upload input ::', req.body.quickText);
   try {
-    const upload = await savedReceipt(userId, req.output);
+    const upload = await savedReceipt(userId, req.body.quickText);
+    req.output = req.body.quickText;
     req.saved = upload;
     next();
   } catch(err) {

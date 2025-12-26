@@ -7,7 +7,7 @@ export const generateTokenAndSetCookie = (req, res, next) => {
     console.log(chalk.red('Generating token :: accessing user id :: ' + req.userId));
 
 
-    const token = jwt.sign({userId : req.userId}, process.env.JWT_SECRET_KEY, { expiresIn: '15m' });
+    const token = jwt.sign({userId : req.userId}, process.env.JWT_SECRET_KEY, { expiresIn: '1hr' });
     const refreshToken = jwt.sign({userId : req.userId}, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
     
     res.cookie('accessToken', token, {
@@ -15,7 +15,7 @@ export const generateTokenAndSetCookie = (req, res, next) => {
         sameSite: 'lax', // Protect against CSRF
         // secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
         secure : false,
-        maxAge: 15 * 60 * 1000
+        maxAge: 60 * 60 * 1000 // 1hr
     });
 
     res.cookie('refreshToken', refreshToken, {
@@ -24,8 +24,8 @@ export const generateTokenAndSetCookie = (req, res, next) => {
         sameSite: 'lax', // Protect against CSRF
         // secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
         secure : false,
-
-        maxAge: 15 * 60 * 1000
+        
+        maxAge: 60 * 60 * 1000 // 1hr
     });
     console.log('Cookie access ::', token);
     console.log('Cookie refresh ::', refreshToken);

@@ -13,7 +13,9 @@ import ora from 'ora';
 const readDescriptionByAi = async (spinner, data) => {
     spinner.color = 'red';
     spinner.text = 'Analyzing text with AI...';
-    return await readDescriptionAi(data);
+    const result = await readDescriptionAi(data);
+    spinner.clear();
+    return result;
 }
 
 
@@ -25,16 +27,45 @@ export async function extractText(req, res, next) {
     spinner.color = 'red';
     spinner.text = 'Analyzing text with AI...';
 
-    const dataOutput = await readParrallelAi(await readOcrResponseTask(resObject));
+    const attempts = async () => {
+        try {
+            const dataOutput = await readParrallelAi(await readOcrResponseTask(resObject));
+            console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
 
-    spinner.color = 'yellow';
-    spinner.text = 'Finalizing object';
-    const toObjectParse = jsonToObjOutput(dataOutput);
-    req.extractedText = toObjectParse;
-    spinner.color = 'green';
-    spinner.succeed('Text extracted');
+            if (!dataOutput ||  (Array.isArray(dataOutput) && dataOutput.length === 0)){
+                console.log('!dataOutput :', !dataOutput);
+                console.log('!jsonToObjOutput :', !(typeof jsonToObjOutput(dataOutput)));
+                console.log('!dataOutput?.length :', dataOutput?.length < 1);
 
-    next();
+                 throw Error('Null value');
+            }
+
+            try {
+                spinner.color = 'yellow';
+                spinner.text = 'Finalizing object';
+                console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
+                const toObjectParse = jsonToObjOutput(dataOutput);
+                req.extractedText = toObjectParse;
+                spinner.color = 'green';
+                spinner.succeed('Text extracted');
+
+                next();
+            } catch (err) {
+                console.error('Failed json conversion');
+                attempts();
+            }
+
+        } catch (err) {
+            console.error(err);
+            attempts();
+        }
+    }
+    attempts();
+
+
+
+
+
 }
 
 
@@ -60,51 +91,37 @@ export async function extractText(req, res, next) {
 // }
 
 
-const maxRetry = 5;
-let tries = 0;
-
-
-function delay() {
-    return new Promise((acc, rej) => setTimeout(() => acc({test : 'Done'}), 3000));
-}
-
 
 export async function quickParseText(req, res, next) {
     console.log('Req body :: ', req.body);
     const { quickText } = req.body;
 
     if (quickText) {
-        try {
-            const spinner = ora('Scanning text description').start();
+        const spinner = ora('Scanning text description').start();
+        const attempts = async () => {
+            try {
+                const struct = await readDescriptionByAi(spinner, quickText);
+                if (!struct || !(typeof jsonToObjOutput(struct))) throw Error('Null result');
+                else {
+                    spinner.color = 'green';
+                    spinner.succeed('Text extracted');
 
+                    try {
+                        req.output = jsonToObjOutput(struct);
+                        next();
 
-            const struct = await readDescriptionByAi(spinner, quickText);
-
-            if (tries < maxRetry) throw Error('Null result');
-            else {
-                spinner.color = 'green';
-                spinner.succeed('Text extracted');
-                spinner.clear();
-                next();
+                    } catch (err) {
+                        console.log('Error json conversion');
+                        attempts();
+                    }
+                }
+            } catch (err) {
+                console.error('Failed read quick text', err);
+                attempts();
             }
-
-            // req.output = jsonToObjOutput(struct);
-
-        } catch (err) {
-            console.error('Failed read quick text', err);
-            tries++;
-
-            const spinner = ora("Retrying...").start();
-            spinner.color = "red";
-            spinner.text = "Retrying";
-            spinner.clear();
-
-            await delay();
-            quickParseText(req, res, next);
-
-            // spinner.color = "green";
-            // spinner.succeed('Parsed succedded');
         }
+        attempts();
+
     } else {
         console.error('No Quick text contents');
     }

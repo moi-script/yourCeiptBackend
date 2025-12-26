@@ -112,6 +112,11 @@ export function aiPrompt(scribe, tesseract = "") {
         Input 1 -> ${scribe}
         Input 2 -> ${tesseract}
 
+        if encounter simple sentence, saved that kind of into json form and when other is not existed
+        set them into null property
+
+        if possible translate them all into english
+
         Requirements:
         1. Enclose the entire JSON output in underscores (_) at the start and end.
         2. Fill all "price" fields with the correct currency symbol based on the country:

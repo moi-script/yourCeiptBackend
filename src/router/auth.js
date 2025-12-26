@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { createUser } from '../controllers/userController.js';
+import { createUser, getUserManualReceipts, getUserReceipts } from '../controllers/userController.js';
 import { transformLogin } from '../middleware/transform.js';
 import { validateUserInput } from '../middleware/validator.js';
 import { sanitized } from '../middleware/validator.js';
@@ -9,7 +9,7 @@ import rateLimit from 'express-rate-limit';
 import { generateTokenAndSetCookie } from '../middleware/generateToken.js';
 import { verifyToken } from '../middleware/verifyToken.js';
 import chalk from 'chalk';
-
+import { getFastFreeModel } from '../service/getFreeModels.js';
 
 // rateLimit, for production test
 
@@ -65,6 +65,18 @@ router.get('/verify', verifyToken, (req, res) => {
     });
 });
 
+
+
+router.post('/receipts', getUserReceipts, getUserManualReceipts, (req, res) => {
+    setTimeout(() => {
+    res.status(200).json({success : true, contents : req.receipts})
+
+    }, 800);
+})
+
+// router.post('/manualresceipt', getUserManualReceipts, (req, res) => {
+//     res.status(200).json({success : true, contents : req.receipts})
+// })
 
 
 export default router;
