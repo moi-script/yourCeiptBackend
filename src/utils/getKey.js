@@ -51,6 +51,8 @@ export const clearFolder = async (pathUrl) => {
     }
 }
 
+export const getTravilyKey = () => process.env.TRAVILY_KEY;
+
 
 // clearFolder(uploadDir);
 

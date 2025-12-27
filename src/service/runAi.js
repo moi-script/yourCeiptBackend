@@ -2,11 +2,8 @@ import { OpenRouter } from "@openrouter/sdk";
 import fs from 'fs';
 import { createWriteStream } from "fs";
 import path from "path";
-// import { runParallelWorkers } from "../parseImage/main.js";
 import { runParallelWorkers } from "../middleware/workers.js";
-// import { jsonToObjOutput } from "./jsonHandler.js";
-// import { allInputPrompts, aiPrompt } from "./aiPrompts.js";
-import { jsonToObjOutput, allInputPrompts, aiPrompt } from "../utils/jsonHandler.js";
+import { jsonToObjOutput, allInputPrompts, aiPrompt, quickPrompt, filterItemsAiPrompt } from "../utils/jsonHandler.js";
 import { getAiKey, filterDirlist } from "../utils/getKey.js";
 import chalk from "chalk";
 
@@ -17,7 +14,7 @@ const AI_KEY = getAiKey();
 const aiOutput = createWriteStream('./outputAI.txt');
 
 
-function readTextAi(prompts) {
+export function readTextAi(prompts) {
     let body = '';
     return async function () {
 
@@ -25,8 +22,10 @@ function readTextAi(prompts) {
             apiKey: AI_KEY
         });
 
+        // nvidia/nemotron-3-nano-30b-a3b:free
+        // xiaomi/mimo-v2-flash:free
         const stream = await openrouter.chat.send({
-            model: "xiaomi/mimo-v2-flash:free",
+            model: "nvidia/nemotron-3-nano-30b-a3b:free",
             user: 'test',
             messages: [
                 {
@@ -85,14 +84,15 @@ export function readOcrResponseTask(response) {
 }
 
 
-export function descriptionWithPrompt(description) {
-    const prompt =  aiPrompt(description);
+
+export async function descriptionWithPrompt(description) {
+    const prompt =  await quickPrompt(description);
     console.log(chalk.blue('Prompt --> ', prompt));
     return prompt;
 }
 
 export async function readDescriptionAi(prompt) {
-    const readingText = readTextAi(descriptionWithPrompt(prompt));
+    const readingText = readTextAi(await descriptionWithPrompt(prompt));
     return await readingText();
 }
 // get the iterable promp list with a parse text 
@@ -102,13 +102,27 @@ export async function readDescriptionAi(prompt) {
 
 
 
+// export async function readParrallelAi(iterablePrompts) {
+//     const aiTask = Array.from(({ length: iterablePrompts.length }), (_, i) => {
+//         const initAiTask = readTextAi(iterablePrompts[i]);
+//         return initAiTask();
+//     });
+//     return await Promise.all(aiTask);
+// }
+
+
 export async function readParrallelAi(iterablePrompts) {
-    const aiTask = Array.from(({ length: iterablePrompts.length }), (_, i) => {
-        const initAiTask = readTextAi(iterablePrompts[i]);
-        return initAiTask();
-    });
-    return await Promise.all(aiTask);
+    let taskList = [];
+
+    for(let i = 0; i < iterablePrompts.length; i++){
+        // console.log(readTextAi(await iterablePrompts[i]));
+        taskList.push(readTextAi(await iterablePrompts[i])());
+    }
+    return await Promise.all(taskList);
 }
+
+
+
 
 
 // compute time taken -> for performance test; // turn on later

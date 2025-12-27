@@ -39,22 +39,39 @@ export const createReceipt = async (req, res, next) => {
 
 
 export const uploadParseText = async (req, res, next) => {
-  const {userId} = req.body;
+  const { userId } = req.body;
   // console.log('Checking upload input ::', req.body.quickText);
   try {
     const upload = await savedReceipt(userId, req.body.quickText);
     req.output = req.body.quickText;
     req.saved = upload;
     next();
-  } catch(err) {
+  } catch (err) {
     console.error('Unable to upload to db');
 
-    
+
 
   }
 }
 
 
+
+export const deleteReceipt = async (req, res) => {
+  const { id } = req.query;
+  console.log('Id for delete receipt ::', id);
+
+  try {
+    const deletedItem = await Receipt.deleteOne({ _id: id });
+
+    if (!deletedItem) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    res.status(200).json({ message: "Item deleted successfully", deletedItem });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
 
 
 

@@ -8,6 +8,7 @@ import fs from 'fs';
 const files = express.Router();
 // import uploadDir from '../../uploads/uploadDir.js';
 import uploadDir from '../utils/uploadDir.js';
+import { clearFolder } from '../utils/getKey.js';
 // const app = express();
 
 
@@ -86,5 +87,11 @@ files.get('/uploads/:filename', imgHandler);
 
 //     res.sendFile(path.join(uploadDir, 'myImage.png'));
 // })
+
+files.get('/clearUploads', (req, res) => {
+    clearFolder(uploadDir);
+    res.status(200).json({message : "Deleted Successfuly", code : 200})
+})
+
 
 export default files;

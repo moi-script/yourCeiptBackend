@@ -22,10 +22,11 @@ const ManualScheme = new mongoose.Schema({
     },
 
     transaction_type: String,
-    ammount: String,
+    amount: String,
     description: String,
     category: String,
     date: String,
+    currency : String,
     notes: String
 }, {timestamps : true});
 

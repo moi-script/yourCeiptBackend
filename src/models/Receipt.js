@@ -57,7 +57,6 @@ const ReceiptSchema = new mongoose.Schema({
         ref : "User",
         required : true
     },
-
         store : String,
         slogan : String,
         contact :String,
@@ -89,7 +88,8 @@ const ReceiptSchema = new mongoose.Schema({
         currency : String,
         datetime : String,
         notes : String,
-        source_type : String
+        source_type : String,
+        image_source : String
     }
 }, { timestamps: true })
 
