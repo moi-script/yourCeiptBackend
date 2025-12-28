@@ -1,14 +1,7 @@
 import { readParrallelAi, readOcrResponseTask, runParallelOcrTask, readDescriptionAi } from "../service/runAi.js";
-// import uploadDir from "../../uploads/uploadDir.js";
 import uploadDir from "../utils/uploadDir.js";
-// const uploadDir = '../../uploads/';
-
-import { filterDirlist } from "../utils/getKey.js";
 import { jsonToObjOutput } from "../utils/jsonHandler.js";
-import chalk from "chalk";
 import ora from 'ora';
-
-
 
 const readDescriptionByAi = async (spinner, data) => {
     spinner.color = 'red';
@@ -17,7 +10,6 @@ const readDescriptionByAi = async (spinner, data) => {
     spinner.clear();
     return result;
 }
-
 
 export async function extractText(req, res, next) {
     const spinner = ora('Scanning document...').start();
@@ -33,10 +25,6 @@ export async function extractText(req, res, next) {
             console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
 
             if (!dataOutput ||  (Array.isArray(dataOutput) && dataOutput.length === 0)){
-                // console.log('!dataOutput :', !dataOutput);
-                // console.log('!jsonToObjOutput :', !(typeof jsonToObjOutput(dataOutput)));
-                // console.log('!dataOutput?.length :', dataOutput?.length < 1);
-
                  throw Error('Null value');
             }
 

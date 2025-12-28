@@ -3,7 +3,7 @@ import fs from 'fs';
 import { createWriteStream } from "fs";
 import path from "path";
 import { runParallelWorkers } from "../middleware/workers.js";
-import { jsonToObjOutput, allInputPrompts, aiPrompt, quickPrompt, filterItemsAiPrompt } from "../utils/jsonHandler.js";
+import { jsonToObjOutput, allInputPrompts, aiPrompt, quickPrompt, filterItemsAiPrompt, reducedTextPromptTavily, findImagesWithTavily } from "../utils/jsonHandler.js";
 import { getAiKey, filterDirlist } from "../utils/getKey.js";
 import chalk from "chalk";
 
@@ -73,20 +73,24 @@ export async function runParallelOcrTask(source) {
 // console.log('Response Object ::: ', responseObject);
 
 // integrate ai prompts from parsed text from workers 
-export function readOcrResponseTask(response) {
-    return new Promise((acc, rej) => {
-        const prompList = Array.from({ length: response.length }, (_, i) => {
-            const { scribe, tesseract } = response[i];
-            return aiPrompt(scribe.data, tesseract.data);
-        })
-        acc(prompList); 
-    })
+export async function readOcrResponseTask(response) {
+        let promptList = [];
+        for(let i = 0; i < response.length; i++){
+           const { scribe, tesseract } = response[i];
+           const imageTerm = await readTextAi(reducedTextPromptTavily(scribe.data))();
+           const imageSearchQuery = await findImagesWithTavily(imageTerm);
+           console.log('Image seach query --> ', imageSearchQuery);
+           promptList.push(aiPrompt(scribe.data, tesseract.data, (imageSearchQuery?.images || imageSearchQuery)))
+        }       
+        return promptList;
 }
 
 
 
 export async function descriptionWithPrompt(description) {
-    const prompt =  await quickPrompt(description);
+    const imageQuery = await findImagesWithTavily(description);
+    const prompt =  await quickPrompt(description, (imageQuery?.images || null));
+
     console.log(chalk.blue('Prompt --> ', prompt));
     return prompt;
 }

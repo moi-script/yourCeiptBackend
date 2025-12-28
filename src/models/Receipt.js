@@ -46,6 +46,7 @@ const ItemSchema = new mongoose.Schema({
     description : String,
     upc : String,
     type : String,
+    category : String,
     price : Number,
     quantity : Number,
 })

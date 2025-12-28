@@ -15,21 +15,31 @@ const savedReceipt = async (userId, receipts) => {
 
 export const createReceipt = async (req, res, next) => {
 
-  // console.log('Req body :: ', req.body);
   const { userId, ...receipts } = req.body;
+  console.log('Receipt list --> ', receipts);
   try {
-    // const receiptJson = req.body;    
-    // const authenticatedUserId = req.userId;
-
     if (!req.body) throw new Error('No receipt object');
 
-    // console.log("Reciept upload call ::", receipts);
-    // console.log("User id upload call ::", userId);
+    let upload;
+    const keys = Object.keys(receipts);
+    if ((keys[0] === '0')) {
+      console.log('Multiple files detected');
+      for (const k of keys) {
+        upload = await savedReceipt(userId, receipts[k]);
+      }
+      req.saved = upload; // just push the latest we dont need anything 
+      next();
+    } else {
 
-    const upload = await savedReceipt(userId, receipts);
+      upload = await savedReceipt(userId, receipts);
+      req.saved = upload;
+      next();
+    }
 
-    req.saved = upload;
-    next();
+
+
+
+
   } catch (error) {
     console.error("Save Error:", error);
     res.status(500).json({ message: "Failed to save receipt" });
@@ -40,7 +50,6 @@ export const createReceipt = async (req, res, next) => {
 
 export const uploadParseText = async (req, res, next) => {
   const { userId } = req.body;
-  // console.log('Checking upload input ::', req.body.quickText);
   try {
     const upload = await savedReceipt(userId, req.body.quickText);
     req.output = req.body.quickText;

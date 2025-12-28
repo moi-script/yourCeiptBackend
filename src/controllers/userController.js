@@ -20,9 +20,9 @@ dotenv.config();
 export const createUser = async (req, res, next) => {
 
   console.log('Creating user :: ');
-  const { nickname, fullname, email, password } = req.body;
+  const { nickname, fullname, email, password, overSpending, currency, image_profile, theme, nearLimit } = req.body;
 
-  
+
   if (!password || typeof password !== 'string') {
     return res.status(400).json({ error: 'Invalid password' });
   }
@@ -35,6 +35,11 @@ export const createUser = async (req, res, next) => {
       nickname,
       fullname,
       email,
+      overSpending,
+      currency,
+      image_profile,
+      theme,
+      nearLimit,
       password: hashPassword
     });
 
@@ -54,7 +59,7 @@ export const getUserReceipts = async (req, res, next) => {
   const { userId } = req.body;
 
   // console.log("User id :: ", userId);
-  const receipts = await Receipt.find({ userId : userId});
+  const receipts = await Receipt.find({ userId: userId });
   // console.log('Receipts :: ', receipts);
   req.receipts = receipts;
   next();
@@ -66,7 +71,7 @@ export const getUserManualReceipts = async (req, res, next) => {
   const { userId } = req.body;
 
   // console.log("User id :: ", userId);
-  const receipts = await Manual.find({ userId : userId});
+  const receipts = await Manual.find({ userId: userId });
   // console.log('Receipts :: ', receipts);
   req.receipts.push(receipts);
   next();
@@ -87,12 +92,12 @@ export const userAuth = async (req, res, next) => { // needed to parse the incom
 
       // populate userId from db to passed for jwt
       req.userId = user._id;
-      req.user = await User.findOne({_id : user._id }).select('fullname nickname email _id').lean();
+      req.user = await User.findOne({ _id: user._id }).select('fullname nickname email _id, currency theme nearLimit overSpending image_profile').lean();
       console.log('Req user for user auth ::', req.user);
       next();
-      
+
     } else {
-      res.status(404).json({message : 'Invalid email or password', status : 404});
+      res.status(404).json({ message: 'Invalid email or password', status: 404 });
     }
   }
   else res.status(500).send('Internal server error');
@@ -100,16 +105,110 @@ export const userAuth = async (req, res, next) => { // needed to parse the incom
 }
 
 
+export const updateTheme = async (req, res, next) => {
+  const { preferences, userId } = req.body;
+  console.log('Preferences ::', preferences);
+  console.log('User id  ::', userId);
 
-
-
-
-
-export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          theme: preferences,
+        }
+      },
+      { new: true, runValidators: true }).select('theme');
+
+      console.log('Updated user :: ', updatedUser);
+      next();
+
+  } catch (err) {
+    res.status(404).json({ message: 'Invalid user', status: 404 });
+
   }
-};
+
+}
+
+
+export const updateCurrency = async (req, res, next) => {
+  const { currency, userId } = req.body;
+  console.log('Preferences ::', currency);
+  console.log('User id  ::', userId);
+
+  try {
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          currency: currency.toUpperCase(),
+        }
+      },
+      { new: true, runValidators: true }).select('currency');
+
+      console.log('Updated user :: ', updatedUser);
+      next();
+
+  } catch (err) {
+    res.status(404).json({ message: 'Invalid user', status: 404 });
+
+  }
+
+}
+
+
+
+
+export const updateOverSpending = async (req, res, next) => {
+  const { overSpending, userId } = req.body;
+  console.log('Preferences ::', overSpending);
+  console.log('User id  ::', userId);
+
+  try {
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          overSpending: overSpending
+        }
+      },
+      { new: true, runValidators: true }).select('overSpending');
+
+      next();
+
+  } catch (err) {
+    res.status(404).json({ message: 'Invalid user', status: 404 });
+
+  }
+
+}
+
+
+
+export const updateNearLimit = async (req, res, next) => {
+  const { nearLimit, userId } = req.body;
+  console.log('near limit  ::', nearLimit);
+  console.log('User id  ::', userId);
+
+  try {
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          nearLimit: nearLimit
+        }
+      },
+      { new: true, runValidators: true }).select('nearLimit');
+
+      next();
+
+  } catch (err) {
+    res.status(404).json({ message: 'Invalid user', status: 404 });
+
+  }
+
+}

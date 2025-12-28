@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { createUser, getUserManualReceipts, getUserReceipts } from '../controllers/userController.js';
+import { createUser, getUserManualReceipts, getUserReceipts, updateCurrency, updateNearLimit, updateOverSpending, updateTheme } from '../controllers/userController.js';
 import { transformLogin } from '../middleware/transform.js';
 import { validateUserInput } from '../middleware/validator.js';
 import { sanitized } from '../middleware/validator.js';
@@ -92,6 +92,25 @@ router.post('/logout', (req, res) => {
     
     return res.status(200).json({ message: 'Logged out successfully' });
 });
+
+
+
+router.post('/theme', updateTheme, (req, res) => {
+    res.status(200).json({message : "Update Done", code : 200});
+})
+
+router.post('/currency', updateCurrency, (req, res) => {
+    res.status(200).json({message : "Update Done", code : 200});
+})
+
+router.post('/overSpending', updateOverSpending, (req, res) => {
+    res.status(200).json({message : "Update Done", code : 200});
+})
+
+router.post('/nearLimit', updateNearLimit, (req, res) => {
+    res.status(200).json({message : "Update Done", code : 200});
+})
+
 
 // router.post('/manualresceipt', getUserManualReceipts, (req, res) => {
 //     res.status(200).json({success : true, contents : req.receipts})

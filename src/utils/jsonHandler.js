@@ -25,12 +25,11 @@ export const processItems = (data) => {
     })
 }
   
-export async function aiPrompt(scribe, tesseract = "") {
-
+export async function aiPrompt(scribe, tesseract = "", imageSource) {
   try {
 
-    const imageSource = await findImagesWithTavily(scribe + tesseract);
-    console.log('Image source :: ', imageSource.images);
+    // const imageSource = await findImagesWithTavily(scribe + tesseract);
+    console.log('Image source :: ', imageSource);
 
     const format = {
         "store": null,
@@ -55,6 +54,7 @@ export async function aiPrompt(scribe, tesseract = "") {
                 "upc": null,
                 "type": null,
                 "price": null,
+                "category" : null,
                 "quantity": null
             }
         ],
@@ -84,19 +84,20 @@ export async function aiPrompt(scribe, tesseract = "") {
         4. Extract expenses strictly based on what the user provides. Do not guess.
         5. If data is missing, return null for that field.
         6. For items, extract as many as appear in the input.
-        7. Never change the schema. Never add new keys.
-        8. Enclose the entire JSON output in underscores (_) at the start and end.
-        9. Only output the JSON wrapped in underscores (_), do not include any extra text.
+        7. It must contains category, auto pick a matching category[Food, Transportation, Entertainment, Shopping, Utilities, Income, Healthcare, Other] base on item, otherwise return other
+        8. Never change the schema. Never add new keys.
+        9. Enclose the entire JSON output in underscores (_) at the start and end.
+        10. Only output the JSON wrapped in underscores (_), do not include any extra text.
         This is the JSON format you must output:
-        10. You must avoid creativity. You must avoid assumptions. Be literal and extraction-only.
-        11. Only extract items that clearly exist in the input. Do not infer or guess items.
-        12. JSon should be json(object)
+        11. You must avoid creativity. You must avoid assumptions. Be literal and extraction-only.
+        12. Only extract items that clearly exist in the input. Do not infer or guess items.
+        13. JSon should be json(object)
         ${JSON.stringify(format)}
 
         Input 1 -> ${scribe}
         Input 2 -> ${tesseract}
 
-            "image_source": insert a any single url from this source ${imageSource.images} to this image_source 
+            "image_source": insert a any single url from this source ${imageSource[0]} to this image_source 
              "metadata": {
             "currency": null,
             "datetime": null,
@@ -142,6 +143,7 @@ export async function aiPrompt(scribe, tesseract = "") {
 
 }
 
+// integrate prompts for filtering and the input text
 export function filterItemsAiPrompt (input){
    const imageSearchPrompt = `You are an intelligent data extraction assistant. Your task is to analyze the input text (receipt or invoice) and structure it into the specified JSON format.
 
@@ -149,25 +151,29 @@ export function filterItemsAiPrompt (input){
         You must generate a generic, high-quality search query for an image of the main purchase. Follow this logic:
         1. **Identify the "Main" Item:** Look at the items list. Select the item that is most likely the primary product (usually the first item or the most expensive one).
         2. **Clean the Text:** Remove brand codes, UPCs, quantities (e.g., "2x", "1 pc"), and technical specs (e.g., "v2.0", "#8842"). Keep only the descriptive product name.
-        3. **Format for Image Search:** Combine the [Clean Product Name] + "product photo white background".
-           - *Example 1 (Electronics):* Input "1. Wireless Mouse (UPC: 774)", Output -> "Wireless Mouse product photo white background"
-           - *Example 2 (Food):* Input "2x Lrg Pepperoni Pizza", Output -> "Pepperoni Pizza product photo white background"
-           - *Example 3 (Clothing):* Input "Men's Blue Denim Jeans - Size 32", Output -> "Men's Blue Denim Jeans product photo white background"
-           - You must return a single sentence of that is relevance to the details of items
-          `
-
+        3. **Format for Image Search:** Combine the [Clean Product Name] + "white background"
+         - You must return only a valid query like 1 sentence or less than 5 word the is a product name from [Food, Transportation, Entertainment, Shopping, Utilities, Income, Healthcare, Other]
+        `
+          
     return imageSearchPrompt + input;
 }
+
+
+
+// filter text into valid query
 export async function filterItemQuickParser(input) {
     const result = await readTextAi(filterItemsAiPrompt(input))();
     return result;
 }
-export const findImagesWithTavily = async (input) => {
+
+
+// producing images after a valid query
+export const findImagesWithTavily = async (imageQuery) => {
 
   const apiKey = `${getTravilyKey()}`;
 
-  const queryForImage = await filterItemQuickParser(input)
-  console.log('Query for image ---> ', queryForImage);
+  // const queryForImage = await filterItemQuickParser(input)
+  // console.log('Query for image ---> ', queryForImage);
 
    const response = await fetch("https://api.tavily.com/search", {
     method: "POST",
@@ -176,24 +182,21 @@ export const findImagesWithTavily = async (input) => {
     },
     body: JSON.stringify({
       api_key: apiKey,
-      query: queryForImage, 
+      query: imageQuery, 
       include_images: true,       
       search_depth: "basic", 
-      max_results: 5
+      max_results: 2
     })
   });
 
   const data = await response.json();
+  console.log('Image result from tavily ->', data);
   
   // console.log(data.images); 
   return data;
 };
 
-export async function quickPrompt(textInput) {
-
-  const imageSource = await findImagesWithTavily(textInput);
-
-  console.log('Image source :: ', imageSource.images);
+export async function quickPrompt(textInput, imageSource) {
     const format = {
         "store": null,
         "slogan": null,
@@ -216,6 +219,7 @@ export async function quickPrompt(textInput) {
                 "description": null,
                 "upc": null,
                 "type": null,
+                "category" : null,
                 "price": null,
                 "quantity": null
             }
@@ -247,13 +251,14 @@ export async function quickPrompt(textInput) {
         4. Extract expenses strictly based on what the user provides. Do not guess.
         5. If data is missing, return null for that field.
         6. For items, extract as many as appear in the input.
-        7. Never change the schema. Never add new keys.
-        8. Enclose the entire JSON output in underscores (_) at the start and end.
-        9. Only output the JSON wrapped in underscores (_), do not include any extra text.
+        7. It must contains category, auto pick a matching category[food, transportation, entertainment, shopping, utilities, income, healthcare, other] base on item, otherwise return other
+        8. Never change the schema. Never add new keys.
+        9. Enclose the entire JSON output in underscores (_) at the start and end.
+        10. Only output the JSON wrapped in underscores (_), do not include any extra text.
         This is the JSON format you must output:
-        10. You must avoid creativity. You must avoid assumptions. Be literal and extraction-only.
-        11. Only extract items that clearly exist in the input. Do not infer or guess items.
-        12. JSon should be json(object)
+        11. You must avoid creativity. You must avoid assumptions. Be literal and extraction-only.
+        12. Only extract items that clearly exist in the input. Do not infer or guess items.
+        13. JSon should be json(object)
         ${JSON.stringify(format)}
 
         input -> ${textInput}
@@ -266,11 +271,10 @@ export async function quickPrompt(textInput) {
                 "price": null,
                 "quantity": null
             }
-
             put the description into the notes
 
 
-            "image_source": insert a any single url from this source ${imageSource.images} to this image_source 
+            "image_source": insert a any single url from this source ${imageSource[0]} to this image_source 
              "metadata": {
             "currency": null,
             "datetime": null,
@@ -281,6 +285,8 @@ export async function quickPrompt(textInput) {
 
         if encounter simple sentence, saved that kind of into json form and when other is not existed
         set them into null property
+
+        if there was no subtotal or total atleast put the price of an item into the subtotal or total
 
         if possible translate them all into english
 
@@ -307,8 +313,14 @@ export async function quickPrompt(textInput) {
         - Prices must use numeric values only (no currency symbols).
         - Return JSON only, no explanations.
     `;
-
 }
+
+export function reducedTextPromptTavily (textInput) {
+  return `Base on this input -> ${textInput} ->
+          I need find atleast 1 product then produce an simple query less than 6 words about that specific product
+  `
+}
+
 
 export function allInputPrompts(input) {
     return `You are a financial extraction assistant.  

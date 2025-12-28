@@ -20,7 +20,7 @@ export const verifyToken = async (req, res, next) => {
         // console.log('Decoded object ::', decoded);
 
         try {
-            req.user = await User.findOne({_id : decoded.userId }).select('fullname nickname email _id');
+            req.user = await User.findOne({_id : decoded.userId }).select('fullname nickname email _id currency theme overSpending nearLimit image_profile');
             console.log('Req user after verifying ', req.user);
 
         } catch (err) {

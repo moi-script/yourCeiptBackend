@@ -3,6 +3,7 @@ import { getFastFreeModel } from "../service/getFreeModels.js";
 
 
 export async function getAiModels(req, res, next) {
+    console.log('Getting ai models');
     try {
         
         req.models = await getFastFreeModel(getAiKey());
