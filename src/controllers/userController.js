@@ -20,7 +20,7 @@ dotenv.config();
 export const createUser = async (req, res, next) => {
 
   console.log('Creating user :: ');
-  const { nickname, fullname, email, password, overSpending, currency, image_profile, theme, nearLimit } = req.body;
+  const { nickname, fullname, email, password, overSpending, currency, image_profile, image_public_url, theme, nearLimit } = req.body;
 
 
   if (!password || typeof password !== 'string') {
@@ -40,6 +40,7 @@ export const createUser = async (req, res, next) => {
       image_profile,
       theme,
       nearLimit,
+      image_public_url,
       password: hashPassword
     });
 
@@ -92,7 +93,7 @@ export const userAuth = async (req, res, next) => { // needed to parse the incom
 
       // populate userId from db to passed for jwt
       req.userId = user._id;
-      req.user = await User.findOne({ _id: user._id }).select('fullname nickname email _id, currency theme nearLimit overSpending image_profile').lean();
+      req.user = await User.findOne({ _id: user._id }).select('fullname nickname email _id, currency theme nearLimit overSpending image_profile image_public_url').lean();
       console.log('Req user for user auth ::', req.user);
       next();
 
@@ -121,8 +122,8 @@ export const updateTheme = async (req, res, next) => {
       },
       { new: true, runValidators: true }).select('theme');
 
-      console.log('Updated user :: ', updatedUser);
-      next();
+    console.log('Updated user :: ', updatedUser);
+    next();
 
   } catch (err) {
     res.status(404).json({ message: 'Invalid user', status: 404 });
@@ -148,8 +149,8 @@ export const updateCurrency = async (req, res, next) => {
       },
       { new: true, runValidators: true }).select('currency');
 
-      console.log('Updated user :: ', updatedUser);
-      next();
+    console.log('Updated user :: ', updatedUser);
+    next();
 
   } catch (err) {
     res.status(404).json({ message: 'Invalid user', status: 404 });
@@ -177,7 +178,7 @@ export const updateOverSpending = async (req, res, next) => {
       },
       { new: true, runValidators: true }).select('overSpending');
 
-      next();
+    next();
 
   } catch (err) {
     res.status(404).json({ message: 'Invalid user', status: 404 });
@@ -204,7 +205,7 @@ export const updateNearLimit = async (req, res, next) => {
       },
       { new: true, runValidators: true }).select('nearLimit');
 
-      next();
+    next();
 
   } catch (err) {
     res.status(404).json({ message: 'Invalid user', status: 404 });
@@ -212,3 +213,127 @@ export const updateNearLimit = async (req, res, next) => {
   }
 
 }
+
+
+
+
+
+
+export const updateProfileUrl = async (req, res, next) => {
+  const { image_profile, userId } = req.body;
+  console.log('image_profile  ::', image_profile);
+  console.log('User id  ::', userId);
+
+  try {
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          image_profile: image_profile
+        }
+      },
+      { new: true, runValidators: true }).select('image_profile');
+    next();
+
+  } catch (err) {
+    res.status(404).json({ message: 'Invalid user', status: 404 });
+
+  }
+
+}
+
+export const updateFullName = async (req, res, next) => {
+  const { fullname, userId } = req.body;
+  console.log('Fullname  ::', fullname);
+  console.log('User id  ::', userId);
+
+  try {
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          fullname: fullname
+        }
+      },
+      { new: true, runValidators: true }).select('fullname');
+    next();
+
+  } catch (err) {
+    res.status(404).json({ message: 'Invalid user', status: 404 });
+
+  }
+}
+
+
+export const updateNickname = async (req, res, next) => {
+  const { nickname, userId } = req.body;
+  console.log('Fullname  ::', nickname);
+  console.log('User id  ::', userId);
+
+  try {
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          nickname: nickname
+        }
+      },
+      { new: true, runValidators: true }).select('nickname');
+    next();
+
+  } catch (err) {
+    res.status(404).json({ message: 'Invalid user', status: 404 });
+
+  }
+}
+
+export const updateProfilePic = async (req, res, next) => {
+  const { image_source, image_public_url, userId } = req.body;
+  
+  console.log('Image source  ::', image_source);
+  console.log('Image public url  ::', image_public_url);
+
+  console.log('User id  ::', userId);
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          image_profile: image_source,
+          image_public_url : image_public_url
+        }
+      },
+      { new: true, runValidators: true }).select('image_public_url image_profile');
+    next();
+
+  } catch (err) {
+    res.status(404).json({ message: 'Invalid user', status: 404 });
+
+  }
+
+}
+
+export const deleteUserAccount = async (req, res, next) => {
+  const { userId, password } = req.body;
+
+  try {
+    const deleteAccount = await User.findOne({ _id: userId });
+    if (deleteAccount.checkPassword) {
+      const isMatch = await deleteAccount.checkPassword(password);
+
+      if (isMatch) {
+        const deleteAccount = await User.deleteOne({ _id: userId });
+        req.deleteAccount = deleteAccount;
+        next();
+      }
+    }
+
+  } catch (err) {
+    console.err(err)
+  }
+}
+

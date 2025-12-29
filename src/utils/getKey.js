@@ -54,6 +54,8 @@ export const clearFolder = async (pathUrl) => {
 export const getTravilyKey = () => process.env.TRAVILY_KEY;
 
 
+export const getCloudName = () => process.env.CLOUD_NAME;
+
 // clearFolder(uploadDir);
 
 // console.log(process.cwd())

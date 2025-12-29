@@ -13,7 +13,7 @@ import cookieParser from 'cookie-parser';
 import  router  from './src/router/auth.js';
 import files from './src/router/upload.js';
 import receipt from './src/router/receipts.js';
-
+import budget from './src/router/budget.js';
 
 
 // path
@@ -57,6 +57,11 @@ app.use('/', files);
 app.use('/extract', trigger);
 app.use('/receipt', receipt);
 // receipt/upload
+
+// budget route
+app.use('/', budget);
+
+
 
 app.get('/user/register', (req, res) => {
   console.log("Cookie exist :: ", req.cookies);

@@ -18,6 +18,9 @@ const accountSchema = new mongoose.Schema({
   image_profile : {
     type : String,
   },
+  image_public_url : {
+    type : String
+  },
   currency : {
     type : String,
   },

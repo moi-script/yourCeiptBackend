@@ -1,6 +1,7 @@
 import express from 'express';
+import multer from 'multer';
 const router = express.Router();
-import { createUser, getUserManualReceipts, getUserReceipts, updateCurrency, updateNearLimit, updateOverSpending, updateTheme } from '../controllers/userController.js';
+import { createUser, deleteUserAccount, getUserManualReceipts, getUserReceipts, updateCurrency, updateFullName, updateNearLimit, updateNickname, updateOverSpending, updateProfilePic, updateTheme } from '../controllers/userController.js';
 import { transformLogin } from '../middleware/transform.js';
 import { validateUserInput } from '../middleware/validator.js';
 import { sanitized } from '../middleware/validator.js';
@@ -111,6 +112,34 @@ router.post('/nearLimit', updateNearLimit, (req, res) => {
     res.status(200).json({message : "Update Done", code : 200});
 })
 
+router.post('/fullname', updateFullName, (req, res) => {
+    res.status(200).json({message : 'Updated'});
+})
+
+router.post('/nickname', updateNickname, (req, res) => {
+    res.status(200).json({message : 'Updated'});
+})
+
+router.post('/image_profile', updateProfilePic, (req, res) => {
+    res.status(200).json({message : "Update Done", code : 200, public_url : req.public_url});
+})
+
+router.delete('/delete-account', deleteUserAccount, (req, res) => {
+
+     res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: false, 
+        path: '/',
+        sameSite: 'lax' 
+    });
+     res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: false, 
+        path: '/',
+        sameSite: 'lax' 
+    });
+    res.status(200).json({message : "Delete Done", code : 200});
+})
 
 // router.post('/manualresceipt', getUserManualReceipts, (req, res) => {
 //     res.status(200).json({success : true, contents : req.receipts})
