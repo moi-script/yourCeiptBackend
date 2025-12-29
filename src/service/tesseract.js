@@ -18,10 +18,16 @@ parentPort.on('message', async (msg) => {
     await worker.setParameters({
         tessedit_pageseg_mode: '3',
     });
+    try {
+        
     const ret = await worker.recognize(getUrl(msg));
     await worker.terminate();
 
     parentPort.postMessage({ worker: 'tesseract', data: ret.data.text });
+    } catch(err){
+        console.log(chalk.red("Tesseract terminated"));
+        process.exit(1);
+    }
 
 })
 

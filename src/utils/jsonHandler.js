@@ -97,14 +97,14 @@ export async function aiPrompt(scribe, tesseract = "", imageSource) {
         Input 1 -> ${scribe}
         Input 2 -> ${tesseract}
 
-            "image_source": insert a any single url from this source ${imageSource[0]} to this image_source 
+            "image_source": insert a any single url from this source ${imageSource} to this
+             image_source search for the most matched source to item description 
              "metadata": {
-            "currency": null,
+            "currency": null, // you must only put php in currency even though there was any other currency value in input
             "datetime": null,
             "notes": null,
             "image_source": null
         } of meta data 
-
 
         if encounter simple sentence, saved that kind of into json form and when other is not existed
         set them into null property

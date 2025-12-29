@@ -22,18 +22,20 @@ const storage = multer.diskStorage({
         if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
             return cb(new Error('Please upload an image file (jpg, jpeg, or png)'));
         }
+
         cb(undefined, true);
     },
 
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname.replaceAll(" ", ""));// + '-' + uniqueSuffix + path.extname(file.originalname)
+        const newFile = Date.now() + '-' + file.originalname.replaceAll(" ", "");
+        
+        // change the file extension to .png
+        cb(null, newFile.replaceAll(new RegExp(path.parse(newFile).ext, "g"), ".png")); 
     }
 });
 
 
 const upload = multer({ storage: storage });
-
-
 
 files.post('/upload', upload.array('myImages'), (req, res) => {
     console.log('Handling uploads');

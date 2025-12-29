@@ -11,11 +11,11 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 
 // import uploadDir from "../../uploads/uploadDir";ls
-
-
+// cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA5L3JtNTY3LXJtNTU5LWUtbW9ja3VwLWVsZW1lbnQtMDUuanBn
 
 export const getUrl = (msg) => {
-    // console.log(chalk.red('Msg form source ::: ' + msg.path));
+    console.log(chalk.red('Msg form source ::: ' + msg.path));
+
     return `http://localhost:${process.env.PORT}/uploads/${msg.path}.png`;
 }
 

@@ -74,7 +74,9 @@ export const getBudgetList = async (req, res, next) => {
 
 
 export const updateBudgetItem = async (req, res, next) => {
-    const { userId, category, budgetName, budget_id, budgetAmount, spent, color } = req.body;
+    console.log('Trigger update item');
+    
+    const { userId, category, budgetName, budget_id, budgetAmount, color } = req.body;
 
     console.log('User id ::', userId);
     console.log('Budger id ::', budget_id);
@@ -84,7 +86,6 @@ export const updateBudgetItem = async (req, res, next) => {
             $set: {
                 category: category,
                 budgetName: budgetName,
-                spent: spent,
                 budgetAmount: budgetAmount,
                 color: color,
             }

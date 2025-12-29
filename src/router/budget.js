@@ -19,7 +19,7 @@ budget.post('/get/budget', getBudgetList, (req, res) => {
 });
 
 
-budget.put('/budget', updateBudgetItem, (req, res) => {
+budget.post('/update/budget', updateBudgetItem, (req, res) => {
     res.status(200).json({message :  "Updated List", budgetItem : req.updateItem, budgetName : req.budgetName});
 });
 
