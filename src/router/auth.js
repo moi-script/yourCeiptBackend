@@ -68,7 +68,6 @@ router.get('/verify', verifyToken, (req, res) => {
 });
 
 
-
 router.post('/receipts', getUserReceipts, getUserManualReceipts, (req, res) => {
     setTimeout(() => {
     res.status(200).json({success : true, contents : req.receipts})

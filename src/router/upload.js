@@ -11,8 +11,6 @@ import { clearFolder } from '../utils/getKey.js';
 import { deleteCloudImage, uploadCloudImage } from '../controllers/cloudinaryController.js';
 
 
-
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
@@ -33,7 +31,6 @@ const storage = multer.diskStorage({
         cb(null, newFile.replaceAll(new RegExp(path.parse(newFile).ext, "g"), ".png")); 
     }
 });
-
 
 const upload = multer({ storage: storage });
 

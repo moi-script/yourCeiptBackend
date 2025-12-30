@@ -1,30 +1,74 @@
-Find ECOSPACE Canvas Tote Bag_{
-  "store":null,
-  "slogan":null,
-  "contact":null,
-  "manager":null,
-  "address":{"street":"123 Street Name","city":"City Name","state":"State","zip":"12345"},
-  "transaction":{"store_number":null,"operator_number":null,"terminal_number":null,"transaction_number":null},
-  "items":[
-    {"description":"Cauliflower Pasta","upc":null,"type":null,"price":8.20,"category":"Food","quantity":1},
-    {"description":"ECOSPACE Canvas Tote Bag","upc":null,"type":null,"price":15.90,"category":"Shopping","quantity":1},
-    {"description":"Superfood Post Card","upc":null,"type":null,"price":1.90,"category":"Other","quantity":1},
-    {"description":"ECOSPACE Soy Chocolate Drink","upc":null,"type":null,"price":2.75,"category":"Food","quantity":1},
-    {"description":"Vegan Gummies","upc":null,"type":null,"price":6.95,"category":"Food","quantity":2},
-    {"description":"Organic Popping Corn","upc":null,"type":null,"price":3.95,"category":"Food","quantity":1},
-    {"description":"ECOSPACE Cashew Butter Spread","upc":null,"type":null,"price":9.99,"category":"Food","quantity":1}
+{
+  "query": "Green Apple white background"
+}{
+  "store": "SMHYPERMARKET",
+  "slogan": null,
+  "contact": null,
+  "manager": null,
+  "address": {
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null
+  },
+  "transaction": {
+    "store_number": "SN859E8314158",
+    "operator_number": "MIN#130334890",
+    "terminal_number": "PIU No. 1013-122-170018-005",
+    "transaction_number": "PHE"
+  },
+  "items": [
+    {
+      "description": "SAE PechayBaguio",
+      "upc": null,
+      "type": null,
+      "category": null,
+      "price": 57.5,
+      "quantity": 1
+    },
+    {
+      "description": "SSMOVCucumber",
+      "upc": null,
+      "type": null,
+      "category": null,
+      "price": 65.0,
+      "quantity": 1
+    },
+    {
+      "description": "SSHOUCucumber",
+      "upc": null,
+      "type": null,
+      "category": null,
+      "price": 78.4,
+      "quantity": 1
+    },
+    {
+      "description": "SS Celery",
+      "upc": null,
+      "type": null,
+      "category": null,
+      "price": 66.5,
+      "quantity": 1
+    },
+    {
+      "description": "LGI Celery",
+      "upc": null,
+      "type": null,
+      "category": null,
+      "price": 66.5,
+      "quantity": 1
+    }
   ],
-  "subtotal":49.64,
-  "tax_rate":null,
-  "tax_amount":null,
-  "total":49.64,
-  "payment_method":"Cash",
-  "amount_paid":50.0,
-  "metadata":{
-    "currency":"PHP",
-    "datetime":null,
-    "notes":null,
-    "source_type":null,
-    "image_source":"https://oohint.com/wp-content/uploads/2023/09/Canvas-Tote-Bag-OOH-9.jpg"
+  "subtotal": 711.61,
+  "tax_rate": 12,
+  "tax_amount": 85.39,
+  "total": 797.0,
+  "payment_method": "BDO Credit",
+  "amount_paid": 797.0,
+  "metadata": {
+    "currency": "PHP",
+    "datetime": null,
+    "notes": null,
+    "image_source": "https://img.freepik.com/premium-photo/green-apple-white-background_771335-26157.jpg?w=2000"
   }
-}_
+}

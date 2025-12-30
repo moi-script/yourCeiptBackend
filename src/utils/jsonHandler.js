@@ -3,15 +3,15 @@ import { getTravilyKey } from "./getKey.js";
 
 export function jsonToObjOutput(data) {
   if (data.length > 1 && typeof data === 'object') {
-   return data.map(obj => {
+    return data.map(obj => {
       const jsonMatch = obj.match(/\{[\s\S]*\}/);
       return jsonMatch ? JSON.parse(jsonMatch[0]) : null;
     })
   }
-  if(typeof data === 'string' ){
+  if (typeof data === 'string') {
     console.log('Data ::', data);
-  const jsonMatch = data.match(/\{[\s\S]*\}/);
-  return jsonMatch ? JSON.parse(jsonMatch[0]) : null
+    const jsonMatch = data.match(/\{[\s\S]*\}/);
+    return jsonMatch ? JSON.parse(jsonMatch[0]) : null
 
   }
   const jsonMatch = data.pop().match(/\{[\s\S]*\}/);
@@ -20,58 +20,57 @@ export function jsonToObjOutput(data) {
 }
 
 export const processItems = (data) => {
-    data.forEach(({items}, i) => {
-        console.log('Index -- ' + i, ' items :: ', items);
-    })
+  data.forEach(({ items }, i) => {
+    console.log('Index -- ' + i, ' items :: ', items);
+  })
 }
-  
+
 export async function aiPrompt(scribe, tesseract = "", imageSource) {
   try {
-
     // const imageSource = await findImagesWithTavily(scribe + tesseract);
     console.log('Image source :: ', imageSource);
 
     const format = {
-        "store": null,
-        "slogan": null,
-        "contact": null,
-        "manager": null,
-        "address": {
-            "street": null,
-            "city": null,
-            "state": null,
-            "zip": null
-        },
-        "transaction": {
-            "store_number": null,
-            "operator_number": null,
-            "terminal_number": null,
-            "transaction_number": null
-        },
-        "items": [
-            {
-                "description": null,
-                "upc": null,
-                "type": null,
-                "price": null,
-                "category" : null,
-                "quantity": null
-            }
-        ],
-        "subtotal": null,
-        "tax_rate": null,
-        "tax_amount": null,
-        "total": null,
-        "payment_method": null,
-        "amount_paid": null,
-
-        "metadata": {
-            "currency": null,
-            "datetime": null,
-            "notes": null,
-            "source_type": null,
-            "image_source" : null
+      "store": null,
+      "slogan": null,
+      "contact": null,
+      "manager": null,
+      "address": {
+        "street": null,
+        "city": null,
+        "state": null,
+        "zip": null
+      },
+      "transaction": {
+        "store_number": null,
+        "operator_number": null,
+        "terminal_number": null,
+        "transaction_number": null
+      },
+      "items": [
+        {
+          "description": null,
+          "upc": null,
+          "type": null,
+          "price": null,
+          "category": null,
+          "quantity": null
         }
+      ],
+      "subtotal": null,
+      "tax_rate": null,
+      "tax_amount": null,
+      "total": null,
+      "payment_method": null,
+      "amount_paid": null,
+
+      "metadata": {
+        "currency": null,
+        "datetime": null,
+        "notes": null,
+        "source_type": null,
+        "image_source": null
+      }
     }
     return `
     You are a financial extraction assistant.  
@@ -135,17 +134,17 @@ export async function aiPrompt(scribe, tesseract = "", imageSource) {
         - Return JSON only, no explanations.
     `;
 
-  } catch(err) {
+  } catch (err) {
     console.error(err);
   }
 
 
 
-}
+} // degraded prompts
 
 // integrate prompts for filtering and the input text
-export function filterItemsAiPrompt (input){
-   const imageSearchPrompt = `You are an intelligent data extraction assistant. Your task is to analyze the input text (receipt or invoice) and structure it into the specified JSON format.
+export function filterItemsAiPrompt(input) {
+  const imageSearchPrompt = `You are an intelligent data extraction assistant. Your task is to analyze the input text (receipt or invoice) and structure it into the specified JSON format.
 
         ### INSTRUCTIONS (METADATA):
         You must generate a generic, high-quality search query for an image of the main purchase. Follow this logic:
@@ -154,16 +153,20 @@ export function filterItemsAiPrompt (input){
         3. **Format for Image Search:** Combine the [Clean Product Name] + "white background"
          - You must return only a valid query like 1 sentence or less than 5 word the is a product name from [Food, Transportation, Entertainment, Shopping, Utilities, Income, Healthcare, Other]
         `
-          
-    return imageSearchPrompt + input;
+  return imageSearchPrompt + input;
 }
 
 
 
 // filter text into valid query
-export async function filterItemQuickParser(input) {
-    const result = await readTextAi(filterItemsAiPrompt(input))();
+export async function filterItemQuickParser(input, req) {
+  try {
+    const result = await readTextAi(filterItemsAiPrompt(input))(req); // unable ai model settings
     return result;
+
+  } catch (err) {
+    console.error('Unable to filterItems prompts');
+  }
 }
 
 
@@ -171,76 +174,78 @@ export async function filterItemQuickParser(input) {
 export const findImagesWithTavily = async (imageQuery) => {
 
   const apiKey = `${getTravilyKey()}`;
+  try {
 
-  // const queryForImage = await filterItemQuickParser(input)
-  // console.log('Query for image ---> ', queryForImage);
+    const response = await fetch("https://api.tavily.com/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        api_key: apiKey,
+        query: imageQuery,
+        include_images: true,
+        search_depth: "basic",
+        max_results: 2
+      })
+    });
 
-   const response = await fetch("https://api.tavily.com/search", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      api_key: apiKey,
-      query: imageQuery, 
-      include_images: true,       
-      search_depth: "basic", 
-      max_results: 2
-    })
-  });
+    const data = await response.json();
+    console.log('Image result from tavily ->', data.images);
+    return data.images;
+  } catch (err) {
+    console.error('Unable to find images in tavily', err);
 
-  const data = await response.json();
-  console.log('Image result from tavily ->', data);
-  
-  // console.log(data.images); 
-  return data;
+  }
 };
 
+
+
 export async function quickPrompt(textInput, imageSource) {
-    const format = {
-        "store": null,
-        "slogan": null,
-        "contact": null,
-        "manager": null,
-        "address": {
-            "street": null,
-            "city": null,
-            "state": null,
-            "zip": null
-        },
-        "transaction": {
-            "store_number": null,
-            "operator_number": null,
-            "terminal_number": null,
-            "transaction_number": null
-        },
-        "items": [
-            {
-                "description": null,
-                "upc": null,
-                "type": null,
-                "category" : null,
-                "price": null,
-                "quantity": null
-            }
-        ],
-        "subtotal": null,
-        "tax_rate": null,
-        "tax_amount": null,
-        "total": null,
-        "payment_method": null,
-        "amount_paid": null,
+  const format = {
+    "store": null,
+    "slogan": null,
+    "contact": null,
+    "manager": null,
+    "address": {
+      "street": null,
+      "city": null,
+      "state": null,
+      "zip": null
+    },
+    "transaction": {
+      "store_number": null,
+      "operator_number": null,
+      "terminal_number": null,
+      "transaction_number": null
+    },
+    "items": [
+      {
+        "description": null,
+        "upc": null,
+        "type": null,
+        "category": null,
+        "price": null,
+        "quantity": null
+      }
+    ],
+    "subtotal": null,
+    "tax_rate": null,
+    "tax_amount": null,
+    "total": null,
+    "payment_method": null,
+    "amount_paid": null,
 
-        "metadata": {
-            "currency": null,
-            "datetime": null,
-            "notes": null,
-            "source_type": null,
-            "image_source" : null
-        }
+    "metadata": {
+      "currency": null,
+      "datetime": null,
+      "notes": null,
+      "source_type": null,
+      "image_source": null
     }
+  }
 
-    return `
+  return `
     You are a financial extraction assistant.  
     Your task is to analyze user-provided data (image receipts, text expense inputs, or files such as PDF/CSV/DOCX) and convert them into a structured JSON object following the exact schema below.
 
@@ -315,15 +320,14 @@ export async function quickPrompt(textInput, imageSource) {
     `;
 }
 
-export function reducedTextPromptTavily (textInput) {
+export function reducedTextPromptTavily(textInput) {
   return `Base on this input -> ${textInput} ->
           I need find atleast 1 product then produce an simple query less than 6 words about that specific product
   `
 }
 
-
 export function allInputPrompts(input) {
-    return `You are a financial extraction assistant.  
+  return `You are a financial extraction assistant.  
         Your task is to analyze user-provided data (image receipts, text expense inputs, or files such as PDF/CSV/DOCX) and convert them into a structured JSON object following the exact schema below.
 
         Always follow these rules:
@@ -398,7 +402,7 @@ export function allInputPrompts(input) {
 
 export function textExpensePrompts(input) {
 
-    return `You are an information extraction model.  
+  return `You are an information extraction model.  
         Extract all expenses and convert them into this JSON structure (do NOT remove any fields): 
 
         {
@@ -459,3 +463,10 @@ export function textExpensePrompts(input) {
         ${input}
 `
 }
+
+
+
+
+
+
+

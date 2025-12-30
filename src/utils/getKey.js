@@ -56,6 +56,12 @@ export const getTravilyKey = () => process.env.TRAVILY_KEY;
 
 export const getCloudName = () => process.env.CLOUD_NAME;
 
+export const getAzureUrl = () => process.env.AZURE_URL;
+
+export const getAzureKey = () => process.env.AZURE_KEY1;
+
+
+
 // clearFolder(uploadDir);
 
 // console.log(process.cwd())
