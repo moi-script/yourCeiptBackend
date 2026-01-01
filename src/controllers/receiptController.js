@@ -22,8 +22,10 @@ export const createReceipt = async (req, res, next) => {
 
     let upload;
     const keys = Object.keys(receipts);
-    if ((keys[0] === '0')) {
+    if (keys[0] === '0' && (typeof keys === 'object')) {
       console.log('Multiple files detected');
+      console.log('Key index -->', keys);
+            
       for (const k of keys) {
         upload = await savedReceipt(userId, receipts[k]);
       }

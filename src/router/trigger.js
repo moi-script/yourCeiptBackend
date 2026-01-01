@@ -2,7 +2,7 @@ import express from 'express';
 import { uploadParseText } from '../controllers/receiptController.js';
 import { extractText, quickParseText } from '../controllers/batchController.js';
 import { getAiModels } from '../controllers/getAiModelsController.js';
-import { generatingSanitizePrompts, getImageItemUrl, getUploadImages, producingJsonOutput } from '../controllers/ocrController.js';
+import { generatingSanitizePrompts, getImageItemUrl, getUploadImages, producingJsonOutput, validateFormat } from '../controllers/ocrController.js';
 const trigger = express.Router();
 
 
@@ -26,8 +26,8 @@ trigger.post('/uploadQuick', uploadParseText, (req, res) => {
 
 })
 
-trigger.get('/azure', getUploadImages, getImageItemUrl, generatingSanitizePrompts, producingJsonOutput, (req, res) => {
-    res.status(200).json({message : "Done extracting text", code : 200, contents : req.output});
+trigger.get('/azure', getUploadImages, getImageItemUrl, generatingSanitizePrompts, producingJsonOutput, validateFormat, (req, res) => {
+    res.status(200).json({message : "Done extracting text", code : 200, contents : req.jsonResult});
 });
 
 

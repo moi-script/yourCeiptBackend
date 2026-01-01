@@ -1,5 +1,5 @@
 import Manual from "../models/Manual.js";
-
+import Receipt from "../models/Receipt.js";
 
 
 export const createManual = async (req, res, next) => {
@@ -12,7 +12,7 @@ export const createManual = async (req, res, next) => {
         console.log("Reciept upload call ::", receipts);
         // console.log("User id upload call ::", userId);
     
-        const newManualReceipt = new Manual({
+        const newManualReceipt = new Receipt({
           ...receipts,     
           userId: userId 
         });

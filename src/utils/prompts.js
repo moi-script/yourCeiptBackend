@@ -2,78 +2,71 @@
 export const hanldeReceiptFormatPrompts = (ocrText, image_source) => {
 
     const format = {
-        "store": null,
-        "slogan": null,
-        "contact": null,
-        "manager": null,
+        "store": "String",
+        "slogan": "String",
+        "contact": "String",
+        "manager": "String",
         "address": {
-            "street": null,
-            "city": null,
-            "state": null,
-            "zip": null
+            "street": "String" ,
+            "city": "String",
+            "state": "String" ,
+            "zip": "String"
         },
         "transaction": {
-            "store_number": null,
-            "operator_number": null,
-            "terminal_number": null,
-            "transaction_number": null
+            "store_number": "String" ,
+            "operator_number": "String" ,
+            "terminal_number": "String" ,
+            "transaction_number": "String"
         },
         "items": [
             {
-                "description": null,
-                "upc": null,
-                "type": null,
-                "category": null,
-                "price": null,
-                "quantity": null
+                "description": "String ",
+                "upc": "String" ,
+                "type": "String" ,
+                "category": "String" ,
+                "price": "Number" ,
+                "quantity": "Number" 
             }
         ],
-        "subtotal": null,
-        "tax_rate": null,
-        "tax_amount": null,
-        "total": null,
-        "payment_method": null,
-        "amount_paid": null,
+        "subtotal": "Number" ,
+        "tax_rate": "Number" ,
+        "tax_amount": "Number" ,
+        "total": "Number" ,
+        "payment_method": "String",
+        "amount_paid": "Number" ,
 
         "metadata": {
-            "currency": null,
-            "datetime": null,
-            "notes": null,
-            "source_type": null,
-            "image_source": null
+            "currency": "String" ,
+            "datetime": "String ",
+            "notes": "String",
+            "source_type": "String",
+            "image_source": "String"
         }
     }
-    return `Here is the specific System Prompt you need to send to the LLM (like OpenAI/Claude/Gemini) to clean up this messy OCR data.
-                This prompt includes logic to "repair" the broken lines (concatenating items split across multiple lines) and randomly selects an image URL as requested.
-                The System Prompt to Use
-                Role:
-                You are a specialized Receipt OCR Parser. Your job is to take raw, messy text arrays from receipt scans and convert them into a strict, clean JSON format.
-                Data Parsing Rules:
-                Header Extraction: Identify the store name (usually the first line), branch/location (usually the second line), and any transaction identifiers (TIN, Terminal, etc.).
-                Item Reconstruction (Crucial): The input text is fragmented. You must intelligently concatenate lines that belong to a single item.
-                Look for patterns like Weight X Price (e.g., "1.150 X 50.00") followed by an Item Name and then a Total Price. Combine these distinct lines into one item object.
-                If a line contains a product name and the next line is a price, link them.
-                Clean up artifacts like ·, +, or B at the start of item names.
-                Image Source Logic: For the metadata.image_source field, you MUST randomly select exactly one URL from the provided list below:
-                https://img.freepik.com/premium-photo/cucumber-isolated-white-background_214530-263.jpg?w=2000
-                https://img.freepik.com/premium-photo/cucumber-vegetable-isolated-white-background_42033-135.jpg?w=2000
-                https://img.freepik.com/premium-photo/group-cucumbers-white-background_81048-32387.jpg?w=2000
-                https://c8.alamy.com/comp/2J5NA0R/cucumber-isolated-on-white-background-2J5NA0R.jpg
-                https://thumbs.dreamstime.com/z/green-fresh-cucumbers-white-background-d-render-green-fresh-cucumbers-white-background-127191181.jpg
-                Formatting: Return ONLY valid JSON. Do not include markdown formatting (like '''json), explanations, or conversational text.
+    
+        return `You are a Receipt Parser. Convert messy OCR text into clean JSON.
 
-                ### INPUT DATA
-                [${ocrText}]
-                // notice that this input is array, convert to json using this format
-                ${JSON.stringify(format)}
-                
-                
-                dont forget to "image_source": insert a any single url from this source ${image_source} to this image_source 
-                      "metadata": {
-                     "currency": null,
-                     "datetime": null,
-                     "notes": null,
-                     "image_source": null
-                 } of meta data 
-                `;
+        TASK:
+        1. Parse the receipt data from this array: [${ocrText}]
+        2. Extract store info, items, and prices
+        3. Return ONLY valid JSON (no markdown, no explanations)
+
+        RULES:
+        - Combine split lines that belong together (item name + price)
+        - Remove symbols like ·, +, B from item names
+        - Look for patterns: "quantity X price" then "item name" then "total"
+        - If category is missing, assign one: [Food, Shopping, Transportation, Entertainment, Utilities, Income, Healthcare, Other]
+        - For image_source: randomly pick ONE url from: ${image_source}
+
+        OUTPUT FORMAT:
+        ${JSON.stringify(format, null, 2)}
+
+        IMPORTANT:
+        - Each item gets its own entry in the items array
+        - Fill all fields (use null if data missing)
+        - Put the random image URL in metadata.image_source
+        - Return pure JSON only
+`;
+
+
 }

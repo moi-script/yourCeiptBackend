@@ -314,6 +314,7 @@ export async function quickPrompt(textInput, imageSource) {
         - Datetime: Extract exact format from receipt or text if found.
         - If input is a plain text budget list, set source_type = "text".
         - If input is an image or file, set source_type appropriately.
+        - Must only follow the format avoid creating or deleting properties
         - If total is not provided, compute if possible (sum items + tax).
         - Prices must use numeric values only (no currency symbols).
         - Return JSON only, no explanations.

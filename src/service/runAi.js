@@ -31,7 +31,7 @@ export function readTextAi(prompts, req) {
         // nvidia/nemotron-3-nano-30b-a3b:free
         // xiaomi/mimo-v2-flash:free
         const stream = await openrouter.chat.send({
-            model:  "nvidia/nemotron-3-nano-30b-a3b:free",
+            model:  "kwaipilot/kat-coder-pro:free",
             user: 'test',
             messages: [
                 {
