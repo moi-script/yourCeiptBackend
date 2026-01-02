@@ -49,35 +49,7 @@ export async function extractText(req, res, next) {
         }
     }
     attempts();
-
-
-
-
-
 }
-
-
-
-
-// export async function extractText(req, res, next) {
-//     const spinner = ora('Scanning document...').start();
-//     spinner.color = 'blue';
-
-//     const resObject = await runParallelOcrTask(uploadDir);
-
-//     const dataOutput = await readOcrResponseTask(resObject);
-
-//     const struct = await readByAi(spinner, dataOutput);
-
-//     spinner.color = 'yellow';
-//     spinner.text = 'Finalizing object';
-//     const toObjectParse = jsonToObjOutput(struct);
-//     req.extractedText = toObjectParse;
-//     spinner.color = 'green';
-//     spinner.succeed('Text extracted');
-//     next();
-// }
-
 
 
 export async function quickParseText(req, res, next) {

@@ -3,7 +3,7 @@ import Receipt from "../models/Receipt.js";
 
 
 const savedReceipt = async (userId, receipts) => {
-
+  console.log('Receipt from saving ::', receipts);
   const newReceipt = new Receipt({
     ...receipts,
     userId: userId
@@ -37,10 +37,6 @@ export const createReceipt = async (req, res, next) => {
       req.saved = upload;
       next();
     }
-
-
-
-
 
   } catch (error) {
     console.error("Save Error:", error);

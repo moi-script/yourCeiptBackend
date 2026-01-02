@@ -60,11 +60,11 @@ export const addBudgetItem = async (req, res, next) => {
 
 export const getBudgetList = async (req, res, next) => {
     const { userId } = req.body;
-    console.log("user id :", userId);
+    // console.log("user id :", userId);
 
     try {
         const getItem = await Budget.find({ userId });
-        console.log("getItem -> ", getItem);
+        // console.log("getItem -> ", getItem);
         req.itemList = getItem;
         next();
     } catch (err) {

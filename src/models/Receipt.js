@@ -90,7 +90,8 @@ const ReceiptSchema = new mongoose.Schema({
         datetime : String,
         notes : String,
         source_type : String,
-        image_source : String
+        type : { type : String},
+        image_source : String,
     }
 }, { timestamps: true })
 

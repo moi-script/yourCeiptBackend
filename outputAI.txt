@@ -1,0 +1,296 @@
+{
+  "store": "CloudNine Digital Services",
+  "slogan": "Smart Solutions for Modern Businesses",
+  "contact": "+63 905 771 4422",
+  "manager": "Patrick Lim",
+  "address": {
+    "street": "Suite 405, TechHub Tower",
+    "city": "Bonifacio Global City",
+    "state": "Metro Manila",
+    "zip": "1634"
+  },
+  "transaction": {
+    "store_number": "CNDS-012",
+    "operator_number": "OP-19",
+    "terminal_number": "T-05",
+    "transaction_number": "TRX-20260126-002908"
+  },
+  "items": [
+    {
+      "description": "Website Development Service",
+      "upc": "990112233445",
+      "type": "Professional Service",
+      "category": "other",
+      "price": 18000.00,
+      "quantity": 1
+    },
+    {
+      "description": "Monthly Website Maintenance",
+      "upc": "990223344556",
+      "type": "Professional Service",
+      "category": "other",
+      "price": 3500.00,
+      "quantity": 1
+    },
+    {
+      "description": "Domain & Hosting Fee (1 Year)",
+      "upc": "990334455667",
+      "type": "Professional Service",
+      "category": "other",
+      "price": 2500.00,
+      "quantity": 1
+    }
+  ],
+  "subtotal": 24000.00,
+  "tax_rate": 12,
+  "tax_amount": 2880.00,
+  "total": 26880.00,
+  "payment_method": "Bank Transfer",
+  "amount_paid": 26880.00,
+  "metadata": {
+    "currency": "PHP",
+    "datetime": "2026-01-26T14:40:00.000Z",
+    "notes": "Client payment for digital services",
+    "source_type": "POS",
+    "type": "Income",
+    "image_source": null
+  }
+}{
+  "store": "ValuePlus Superstore",
+  "slogan": "More Value Every Day",
+  "contact": "+63 920 445 3321",
+  "manager": "Anthony Reyes",
+  "address": {
+    "street": "56 Mindanao Avenue, Project 6",
+    "city": "Quezon City",
+    "state": "Metro Manila",
+    "zip": "1105"
+  },
+  "transaction": {
+    "store_number": "VP-058",
+    "operator_number": "OP-512",
+    "terminal_number": "T-09",
+    "transaction_number": "TRX-20251212-002876"
+  },
+  "items": [
+    {
+      "description": "Laundry Detergent Powder 1kg",
+      "upc": "4810001122334",
+      "type": "Household",
+      "category": "other",
+      "price": 145.00,
+      "quantity": 1
+    },
+    {
+      "description": "Dishwashing Liquid 500ml",
+      "upc": "4811112233445",
+      "type": "Household",
+      "category": "other",
+      "price": 65.00,
+      "quantity": 1
+    },
+    {
+      "description": "Bath Soap Bar (3 pcs)",
+      "upc": "4812223344556",
+      "type": "Household",
+      "category": "other",
+      "price": 78.00,
+      "quantity": 1
+    },
+    {
+      "description": "Tissue Paper Roll (4 pack)",
+      "upc": "4813334455667",
+      "type": "Household",
+      "category": "other",
+      "price": 120.00,
+      "quantity": 1
+    }
+  ],
+  "subtotal": 408.00,
+  "tax_rate": 12,
+  "tax_amount": 48.96,
+  "total": 456.96,
+  "payment_method": "Cash",
+  "amount_paid": 500.00,
+  "metadata": {
+    "currency": "PHP",
+    "datetime": "2025-12-12T17:08:44.517Z",
+    "notes": "Household essentials purchase",
+    "source_type": "OCR",
+    "type": "Expense",
+    "image_source": null
+  }
+}{
+  "store": "CozyHome Furniture",
+  "slogan": "Comfort for Every Corner",
+  "contact": "+63 927 445 8899",
+  "manager": "Andrea Santos",
+  "address": {
+    "street": "Unit 12, Greenfield Mall",
+    "city": "Mandaluyong",
+    "state": "Metro Manila",
+    "zip": "1550"
+  },
+  "transaction": {
+    "store_number": "CHF-022",
+    "operator_number": "OP-08",
+    "terminal_number": "T-03",
+    "transaction_number": "TRX-20251210-005112"
+  },
+  "items": [
+    {
+      "description": "Dining Table Set",
+      "upc": "820112233445",
+      "type": "Household",
+      "category": "other",
+      "price": 12500.0,
+      "quantity": 1
+    },
+    {
+      "description": "Sofa 3-Seater",
+      "upc": "820223344556",
+      "type": "Household",
+      "category": "other",
+      "price": 18750.0,
+      "quantity": 1
+    },
+    {
+      "description": "LED Floor Lamp",
+      "upc": "820334455667",
+      "type": "Household",
+      "category": "other",
+      "price": 3200.0,
+      "quantity": 2
+    }
+  ],
+  "subtotal": 37650.0,
+  "tax_rate": 12.0,
+  "tax_amount": 4518.0,
+  "total": 42168.0,
+  "payment_method": "Credit Card",
+  "amount_paid": 42168.0,
+  "metadata": {
+    "currency": "PHP",
+    "datetime": "2025-12-10T16:50:00.000Z",
+    "notes": "Home furniture purchase",
+    "source_type": "text",
+    "type": "Expense",
+    "image_source": null
+  }
+}{"store":"Manila Water & Power Co.","slogan":"Reliable Utilities, Every Day","contact":"+63 922 334 7788","manager":"Carla Reyes","address":{"street":"88 Energy Street","city":"Mandaluyong","state":"Metro Manila","zip":"1550"},"transaction":{"store_number":"MWP-001","operator_number":"OP-01","terminal_number":"T-01","transaction_number":"TRX-20260102-000101"},"items":[{"description":"Electricity Bill – January","upc":"600112233445","type":"Utility","category":"utilities","price":2750.0,"quantity":1},{"description":"Water Bill – January","upc":"600223344556","type":"Utility","category":"utilities","price":820.0,"quantity":1},{"description":"Internet Subscription – January","upc":"600334455667","type":"Utility","category":"utilities","price":1200.0,"quantity":1}],"subtotal":4770.0,"tax_rate":12.0,"tax_amount":572.4,"total":5342.4,"payment_method":"Online Banking","amount_paid":5342.4,"metadata":{"currency":"PHP","datetime":"2026-01-02T09:30:00.000Z","notes":"Monthly utility payments","source_type":"POS","type":"Expense","image_source":null}}```json
+{
+  "store": "MetroFuel Service Station",
+  "slogan": "Powering Every Journey",
+  "contact": "+63 945 662 1188",
+  "manager": "Ronald Dela Peña",
+  "address": {
+    "street": "120 EDSA Corner Aurora Blvd, Cubao",
+    "city": "Quezon City",
+    "state": "Metro Manila",
+    "zip": "1109"
+  },
+  "transaction": {
+    "store_number": "MFS-015",
+    "operator_number": "OP-28",
+    "terminal_number": "T-04",
+    "transaction_number": "TRX-20260102-003212"
+  },
+  "items": [
+    {
+      "description": "Unleaded Gasoline",
+      "upc": "710112233446",
+      "type": "Transportation",
+      "category": "transportation",
+      "price": 68.00,
+      "quantity": 30
+    },
+    {
+      "description": "Car Wash – Full Service",
+      "upc": "710223344557",
+      "type": "Transportation",
+      "category": "transportation",
+      "price": 250.00,
+      "quantity": 1
+    },
+    {
+      "description": "Engine Oil Replacement",
+      "upc": "710334455668",
+      "type": "Transportation",
+      "category": "transportation",
+      "price": 500.00,
+      "quantity": 1
+    }
+  ],
+  "subtotal": 3790.00,
+  "tax_rate": 12,
+  "tax_amount": 454.80,
+  "total": 4244.80,
+  "payment_method": "Cash",
+  "amount_paid": 4244.80,
+  "metadata": {
+    "currency": "PHP",
+    "datetime": "2026-01-02T15:20:00.000Z",
+    "notes": "Fuel and car maintenance",
+    "source_type": "text",
+    "type": "Expense",
+    "image_source": null
+  }
+}
+```{
+  "store": "GreenMart Supermarket",
+  "slogan": "Fresh & Affordable Everyday",
+  "contact": "+63 916 334 5567",
+  "manager": "Lorna Velasco",
+  "address": {
+    "street": "Unit 5, Robinsons Mall",
+    "city": "Manila",
+    "state": "Metro Manila",
+    "zip": "1000"
+  },
+  "transaction": {
+    "store_number": "GM-032",
+    "operator_number": "OP-12",
+    "terminal_number": "T-07",
+    "transaction_number": "TRX-20260102-004112"
+  },
+  "items": [
+    {
+      "description": "Whole Wheat Bread 500g",
+      "upc": "123456789013",
+      "type": "Food",
+      "category": "food",
+      "price": 150.00,
+      "quantity": 2
+    },
+    {
+      "description": "Fresh Milk 1L",
+      "upc": "987654321099",
+      "type": "Food",
+      "category": "food",
+      "price": 95.00,
+      "quantity": 3
+    },
+    {
+      "description": "Bananas (per kg)",
+      "upc": "111222333445",
+      "type": "Food",
+      "category": "food",
+      "price": 55.00,
+      "quantity": 5
+    }
+  ],
+  "subtotal": 740.00,
+  "tax_rate": 0.12,
+  "tax_amount": 88.80,
+  "total": 828.80,
+  "payment_method": "Cash",
+  "amount_paid": 828.80,
+  "metadata": {
+    "currency": "PHP",
+    "datetime": "2026-01-02T11:45:00.000Z",
+    "notes": "Grocery purchase",
+    "source_type": "text",
+    "type": "Expense",
+    "image_source": null
+  }
+}

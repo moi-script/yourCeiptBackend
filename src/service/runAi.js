@@ -96,7 +96,8 @@ export async function readOcrResponseTask(response) {
 
 export async function descriptionWithPrompt(description) {
     const imageQuery = await findImagesWithTavily(description);
-    const prompt =  await quickPrompt(description, (imageQuery?.images || null));
+    console.log('Image query ::', imageQuery);
+    const prompt =  await quickPrompt(description, (imageQuery || null));
 
     console.log(chalk.blue('Prompt --> ', prompt));
     return prompt;

@@ -49,7 +49,9 @@ const ReceiptSchema = z.object({
         datetime: z.string().nullable(),
         notes: z.string().nullable(),
         source_type: z.string().nullable(),
+        type: z.string().nullable(),
         image_source: z.string().nullable(),
+
     })
 });
 

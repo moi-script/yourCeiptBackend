@@ -1,6 +1,7 @@
 
 export const hanldeReceiptFormatPrompts = (ocrText, image_source) => {
 
+    const formatDate = new Date().toISOString();
     const format = {
         "store": "String",
         "slogan": "String",
@@ -37,9 +38,10 @@ export const hanldeReceiptFormatPrompts = (ocrText, image_source) => {
 
         "metadata": {
             "currency": "String" ,
-            "datetime": "String ",
+            "datetime": "String ", 
             "notes": "String",
             "source_type": "String",
+            "type": "String",
             "image_source": "String"
         }
     }
@@ -65,8 +67,9 @@ export const hanldeReceiptFormatPrompts = (ocrText, image_source) => {
         - Each item gets its own entry in the items array
         - Fill all fields (use null if data missing)
         - Put the random image URL in metadata.image_source
+        - Put the Income or Expense only in the metadata.type 
+        - Convert metadata.datetime into ISOString format if no date is provided put this date ${formatDate}
         - Return pure JSON only
 `;
-
 
 }
