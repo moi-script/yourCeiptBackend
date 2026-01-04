@@ -1,46 +1,4 @@
 import mongoose, { mongo } from "mongoose";
-import bcrypt from "bcryptjs";
-
-//  const format = {
-//         "store": null,
-//         "slogan": null,
-//         "contact": null,
-//         "manager": null,
-//         "address": {
-//             "street": null,
-//             "city": null,
-//             "state": null,
-//             "zip": null
-//         },
-//         "transaction": {
-//             "store_number": null,
-//             "operator_number": null,
-//             "terminal_number": null,
-//             "transaction_number": null
-//         },
-//         "items": [
-//             {
-//                 "description": null,
-//                 "upc": null,
-//                 "type": null,
-//                 "price": null,
-//                 "quantity": null
-//             }
-//         ],
-//         "subtotal": null,
-//         "tax_rate": null,
-//         "tax_amount": null,
-//         "total": null,
-//         "payment_method": null,
-//         "amount_paid": null,
-
-//         "metadata": {
-//             "currency": null,
-//             "datetime": null,
-//             "notes": null,
-//             "source_type": null
-//         }
-//     }
 
 const ItemSchema = new mongoose.Schema({
     description : String,

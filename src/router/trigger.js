@@ -1,7 +1,7 @@
 import express from 'express';
 import { uploadParseText } from '../controllers/receiptController.js';
 import { extractText, quickParseText } from '../controllers/batchController.js';
-import { getAiModels } from '../controllers/getAiModelsController.js';
+import { getAiModels, getUserModel, saveAiModel } from '../controllers/getAiModelsController.js';
 import { generatingSanitizePrompts, getImageItemUrl, getUploadImages, producingJsonOutput, validateFormat } from '../controllers/ocrController.js';
 const trigger = express.Router();
 
@@ -36,6 +36,13 @@ trigger.get('/getModels', getAiModels, (req ,res) => {
 
     res.status(200).json({models : req.models});
 } )
+
+
+trigger.post('/postModel', saveAiModel);
+trigger.get('/getUserModel', getUserModel);
+
+
+
 
 
 export default trigger;
