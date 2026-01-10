@@ -3,10 +3,10 @@ import uploadDir from "../utils/uploadDir.js";
 import { jsonToObjOutput } from "../utils/jsonHandler.js";
 import ora from 'ora';
 
-const readDescriptionByAi = async (spinner, data) => {
+const readDescriptionByAi = async (spinner, data, activeModelName = "kwaipilot/kat-coder-pro:free") => {
     spinner.color = 'red';
     spinner.text = 'Analyzing text with AI...';
-    const result = await readDescriptionAi(data);
+    const result = await readDescriptionAi(data, activeModelName);
     spinner.clear();
     return result;
 }
@@ -54,13 +54,13 @@ export async function extractText(req, res, next) {
 
 export async function quickParseText(req, res, next) {
     console.log('Req body :: ', req.body);
-    const { quickText } = req.body;
+    const { quickText, activeModelName } = req.body;
 
     if (quickText) {
         const spinner = ora('Scanning text description').start();
         const attempts = async () => {
             try {
-                const struct = await readDescriptionByAi(spinner, quickText);
+                const struct = await readDescriptionByAi(spinner, quickText, activeModelName);
                 if (!struct || !(typeof jsonToObjOutput(struct))) throw Error('Null result');
                 else {
                     spinner.color = 'green';

@@ -24,6 +24,9 @@ const budgetScheme = new mongoose.Schema({
         type : String,
         required : true
     },
+    target : {
+        type : Number
+    }
 })
 
 export default mongoose.model('budget', budgetScheme);

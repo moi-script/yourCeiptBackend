@@ -5,7 +5,6 @@ import { hanldeReceiptFormatPrompts } from "../utils/prompts.js";
 import { readTextAi } from "../service/runAi.js";
 import { z } from 'zod';
 import chalk from "chalk";
-
 const ReceiptSchema = z.object({
     store: z.string().nullable(),
     slogan: z.string().nullable(),
@@ -126,21 +125,35 @@ export const generatingSanitizePrompts = (req, res, next) => {
 // convert all into valid json object
 export const producingJsonOutput = async (req, res, next) => {
     try {
-        console.log('Prompts ::', req.prompts);
-        req.output = await readTextAi(req.prompts, req)();
+        const { activeModelName } = req.body;
+        console.log(chalk.red('Model name ::' + activeModelName));
+
+        // console.log('Prompts ::', req.prompts);
+        req.output = await readTextAi(req.prompts, req, activeModelName)();
 
         console.log(chalk.blue('output --> ' + req.output));
 
         next();
     } catch (err) {
-        console.error('Unable to read prompts');
+        console.error('Unable to read prompts', err);
         res.status(500).json({ message: "Failed to read prompts", code: 500 });
 
     }
 }
 
 export const validateFormat = (req, res, next) => {
-    const result = ReceiptSchema.safeParse(JSON.parse(req.output));
+
+     function cleanJsonOutput(text) {
+    return text
+    .replace(/```json\s*/gi, "")
+    .replace(/```/g, "")
+    .trim();
+    }
+    const cleanMarkDown = cleanJsonOutput(req.output);
+    
+    
+    // parsing after cleaning
+    const result = ReceiptSchema.safeParse(JSON.parse(cleanMarkDown));
 
     if (!result.success) {
         console.error("Invalid receipt:", result.error.format());

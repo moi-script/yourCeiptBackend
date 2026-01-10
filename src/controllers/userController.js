@@ -5,6 +5,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
+import nodemailer from 'nodemailer';''
+import { getPASS, getEMAIL } from '../utils/getKey.js';
+
 dotenv.config();
 
 // const delay = (res) => {
@@ -337,3 +340,100 @@ export const deleteUserAccount = async (req, res, next) => {
   }
 }
 
+
+
+const USER_PASSWORD = getPASS();
+const USER_EMAIL = getEMAIL();
+
+// Nodemailer Config (Same as before)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: USER_EMAIL,
+    pass: USER_PASSWORD, // App Password
+  },
+});
+
+// --- 1. SEND OTP ---
+export const sendOTP = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save OTP to DB (Expires in 10 mins)
+    user.otp = otp;
+    user.otpExpires = Date.now() + 10 * 60 * 1000;
+    await user.save();
+
+    // Send Email
+    await transporter.sendMail({
+      from: getEMAIL(),
+      to: email,
+      subject: "Your Password Reset OTP",
+      text: `Your OTP is: ${otp}. It is valid for 10 minutes.`,
+    });
+
+    res.json({ message: "OTP sent to email" });
+  } catch (err) {
+    console.error('Unable to send otp :: ', err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// --- 2. VERIFY OTP (For UI Feedback) ---
+export const verifyOTP = async (req, res) => {
+  console.log("OTP value :: ", req.body.otp);
+  console.log("Email value :: ", req.body.email);
+
+
+  const { email, otp } = req.body;
+  console.log('Again ::', email, otp)
+  try {
+    const user = await User.findOne({ 
+      email, 
+      otp, 
+      otpExpires: { $gt: Date.now() } 
+    });
+
+
+
+    if (!user) return res.status(400).json({ message: "Invalid or expired OTP" });
+
+    res.json({ message: "OTP Verified" });
+  } catch (err) {
+    console.error('Unable to verify otp :: ', err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// --- 3. RESET PASSWORD ---
+export const resetPassword = async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+  try {
+    // We check the OTP again here for security
+    const user = await User.findOne({ 
+      email, 
+      otp, 
+      otpExpires: { $gt: Date.now() } 
+    });
+
+    if (!user) return res.status(400).json({ message: "Invalid or expired OTP" });
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+
+    // Clear OTP fields
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    res.json({ message: "Password reset successful" });
+  } catch (err) {
+    console.error('Unable to reset password :: ', err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

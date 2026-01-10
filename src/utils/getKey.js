@@ -62,6 +62,11 @@ export const getAzureKey = () => process.env.AZURE_KEY1;
 
 
 
+export const getEMAIL = () => process.env.EMAIL_USER;
+
+export const getPASS = () => process.env.EMAIL_PASS;
+
+
 // clearFolder(uploadDir);
 
 // console.log(process.cwd())

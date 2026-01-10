@@ -14,7 +14,7 @@ import  router  from './src/router/auth.js';
 import files from './src/router/upload.js';
 import receipt from './src/router/receipts.js';
 import budget from './src/router/budget.js';
-
+import notification from './src/router/notification.js';
 
 // path
 
@@ -61,6 +61,8 @@ app.use('/receipt', receipt);
 // budget route
 app.use('/', budget);
 
+
+app.use('/notification', notification);
 
 
 app.get('/user/register', (req, res) => {

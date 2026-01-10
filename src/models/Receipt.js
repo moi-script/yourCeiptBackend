@@ -35,7 +35,7 @@ const ReceiptSchema = new mongoose.Schema({
         transaction_number : String,
     },
 
-
+    
     items : [ItemSchema],
     subtotal : String,
     tax_rate : String,

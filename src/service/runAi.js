@@ -20,7 +20,10 @@ const AI_KEY = getAiKey();
 const aiOutput = createWriteStream('./outputAI.txt');
 
 
-export function readTextAi(prompts, req) {
+export function readTextAi(prompts, req, activeModelName = "kwaipilot/kat-coder-pro:free") {
+
+    console.log(chalk.blue("Using Model ---> " + activeModelName));
+
     let body = '';
     return async function () {
 
@@ -31,7 +34,7 @@ export function readTextAi(prompts, req) {
         // nvidia/nemotron-3-nano-30b-a3b:free
         // xiaomi/mimo-v2-flash:free
         const stream = await openrouter.chat.send({
-            model:  "kwaipilot/kat-coder-pro:free",
+            model:  activeModelName,
             user: 'test',
             messages: [
                 {
@@ -103,8 +106,8 @@ export async function descriptionWithPrompt(description) {
     return prompt;
 }
 
-export async function readDescriptionAi(prompt) {
-    const readingText = readTextAi(await descriptionWithPrompt(prompt));
+export async function readDescriptionAi(prompt, activeModelName) {
+    const readingText = readTextAi(await descriptionWithPrompt(prompt), null, activeModelName);
     return await readingText();
 }
 // get the iterable promp list with a parse text 

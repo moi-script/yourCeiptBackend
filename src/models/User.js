@@ -15,6 +15,14 @@ const accountSchema = new mongoose.Schema({
     type : String,
     required : true
   },
+  otp: {
+    type: String,
+    required: false // Not required initially
+  },
+  otpExpires: {
+    type: Date,
+    required: false // Not required initially
+  },
   image_profile : {
     type : String,
   },

@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 const router = express.Router();
-import { createUser, deleteUserAccount, getUserManualReceipts, getUserReceipts, updateCurrency, updateFullName, updateNearLimit, updateNickname, updateOverSpending, updateProfilePic, updateTheme } from '../controllers/userController.js';
+import { createUser, deleteUserAccount, getUserManualReceipts, getUserReceipts, resetPassword, sendOTP, updateCurrency, updateFullName, updateNearLimit, updateNickname, updateOverSpending, updateProfilePic, updateTheme, verifyOTP } from '../controllers/userController.js';
 import { transformLogin } from '../middleware/transform.js';
 import { validateUserInput } from '../middleware/validator.js';
 import { sanitized } from '../middleware/validator.js';
@@ -140,9 +140,11 @@ router.delete('/delete-account', deleteUserAccount, (req, res) => {
     res.status(200).json({message : "Delete Done", code : 200});
 })
 
-// router.post('/manualresceipt', getUserManualReceipts, (req, res) => {
-//     res.status(200).json({success : true, contents : req.receipts})
-// })
+
+router.post('/send-otp', sendOTP);
+router.post('/reset-password', resetPassword);
+router.post('/verify-otp', verifyOTP);
+
 
 
 export default router;
