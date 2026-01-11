@@ -1,7 +1,7 @@
 import { processImages } from "../service/ocr.js";
 import { filterItemQuickParser } from "../utils/jsonHandler.js";
 import { findImagesWithTavily } from "../utils/jsonHandler.js";
-import { hanldeReceiptFormatPrompts } from "../utils/prompts.js";
+import { handleReceiptFormatPrompts } from "../utils/prompts.js";
 import { readTextAi } from "../service/runAi.js";
 import { z } from 'zod';
 import chalk from "chalk";
@@ -110,7 +110,7 @@ export const generatingSanitizePrompts = (req, res, next) => {
 
         if (req.contents.length > 0 && req.images_url?.length > 0) {
             console.log('true');
-            req.prompts = hanldeReceiptFormatPrompts(req.contents, req.images_url);
+            req.prompts = handleReceiptFormatPrompts(req.contents, req.images_url);
 
             next();
 

@@ -338,7 +338,7 @@ Rules:
 3. Extract only what exists in the input. Never guess.
 4. Missing data must be null.
 5. Extract all listed items.
-6. You should only assign only the : [food, transportation, entertainment, shopping, utilities, income, healthcare, other] in category. 
+6. You should only assign only the : [food, transportation, entertainment, dining, shopping, utilities, income, healthcare, other] in category. 
 7. Never change, add, or remove schema keys.
 8. Output JSON only. No explanations.
 9. Avoid creativity and assumptions.

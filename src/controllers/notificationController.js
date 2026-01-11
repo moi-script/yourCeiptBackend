@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import Notification from "../models/Notification.js";
 
 // 1. GET: Fetch user's notifications
@@ -20,7 +21,9 @@ export const getNotifications = async (req, res) => {
 // 2. PUT: Mark as read
 export const markAsRead = async (req, res) => {
   try {
+
     const { notificationId } = req.body;
+    console.log(chalk.blue("Notification id :: " + notificationId));
     await Notification.findByIdAndUpdate(notificationId, { isRead: true });
     res.status(200).json({ success: true });
   } catch (err) {

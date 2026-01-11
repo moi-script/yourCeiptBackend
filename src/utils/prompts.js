@@ -1,5 +1,5 @@
 
-export const hanldeReceiptFormatPrompts = (ocrText, image_source) => {
+export const handleReceiptFormatPrompts = (ocrText, image_source) => {
 
     const formatDate = new Date().toISOString();
     const format = {
@@ -57,7 +57,7 @@ export const hanldeReceiptFormatPrompts = (ocrText, image_source) => {
         - Combine split lines that belong together (item name + price)
         - Remove symbols like ·, +, B from item names
         - Look for patterns: "quantity X price" then "item name" then "total"
-        - If category is missing, assign one: [Groceries, Housing, Transportation, Dinning, Utilities, Income, Healthcare, Entertainment, Other]
+        - If category is missing, assign one: [Groceries, Housing, Transportation, Dining, Utilities, Income, Healthcare, Entertainment, Other]
         - For image_source: randomly pick ONE url from: ${image_source}
 
         OUTPUT FORMAT:
