@@ -31,7 +31,7 @@ const app = express();
 dotenv.config({ quiet: true });
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Specific frontend URL
+  origin: ['http://localhost:5173', "https://recepta-phi.vercel.app/"], // Specific frontend URL
   credentials: true                // Allow cookies
 }));
 
