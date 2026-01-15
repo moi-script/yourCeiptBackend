@@ -12,9 +12,9 @@ export const generateTokenAndSetCookie = (req, res, next) => {
     
     res.cookie('accessToken', token, {
         httpOnly: true, // Prevent XSS (JS cannot read this)
-        sameSite: 'lax', // Protect against CSRF
+        sameSite: 'none', // Protect against CSRF
         // secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
-        secure : false,
+        secure : true,
         path : '/',
         maxAge: 7 * 60 * 60 * 1000 // 1hr
     });
@@ -22,9 +22,9 @@ export const generateTokenAndSetCookie = (req, res, next) => {
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: 'lax', // Protect against CSRF
+        sameSite: 'none', // Protect against CSRF
         // secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
-        secure : false,
+        secure : true,
         path : '/',
 
         maxAge: 60 * 60 * 1000 // 1hr

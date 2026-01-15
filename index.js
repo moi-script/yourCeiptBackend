@@ -28,8 +28,11 @@ import { clearFolder } from './src/utils/getKey.js';
 
 // import mongoSanitize from 'express-mongo-sanitize';
 const app = express();
+
 dotenv.config({ quiet: true });
 
+
+app.set('trust proxy', 1);
 app.use(cors({
   origin: ['http://localhost:5173', "https://recepta-phi.vercel.app"], // Specific frontend URL
   credentials: true                // Allow cookies
