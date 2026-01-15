@@ -77,47 +77,47 @@ const TARGET_MODELS = [
 //     }
 // }
 
-async function runHealthCheck() {
-    console.log(`🔍 Checking ${TARGET_MODELS.length} models...`);
-    console.log(`(This may take 10-20 seconds)\n`);
+// async function runHealthCheck() {
+//     console.log(`🔍 Checking ${TARGET_MODELS.length} models...`);
+//     console.log(`(This may take 10-20 seconds)\n`);
 
-    // Run checks in parallel (batches of 5 to avoid blocking your own IP)
-    const results = [];
-    const BATCH_SIZE = 5;
+//     // Run checks in parallel (batches of 5 to avoid blocking your own IP)
+//     const results = [];
+//     const BATCH_SIZE = 5;
 
-    for (let i = 0; i < TARGET_MODELS.length; i += BATCH_SIZE) {
-        const batch = TARGET_MODELS.slice(i, i + BATCH_SIZE);
-        const batchPromises = batch.map(id => checkModelStatus(id));
+//     for (let i = 0; i < TARGET_MODELS.length; i += BATCH_SIZE) {
+//         const batch = TARGET_MODELS.slice(i, i + BATCH_SIZE);
+//         const batchPromises = batch.map(id => checkModelStatus(id));
 
-        const batchResults = await Promise.all(batchPromises);
-        results.push(...batchResults);
+//         const batchResults = await Promise.all(batchPromises);
+//         results.push(...batchResults);
 
-        // Slight delay to be polite
-        process.stdout.write('.');
-    }
+//         // Slight delay to be polite
+//         process.stdout.write('.');
+//     }
 
-    console.log('\n\n=== 🚀 FASTEST AVAILABLE MODELS (Not Rate Limited) ===');
-    const winners = results
-        .filter(r => r.code === 200)
-        .sort((a, b) => a.latency - b.latency); // Sort by speed
+//     console.log('\n\n=== 🚀 FASTEST AVAILABLE MODELS (Not Rate Limited) ===');
+//     const winners = results
+//         .filter(r => r.code === 200)
+//         .sort((a, b) => a.latency - b.latency); // Sort by speed
 
-    if (winners.length === 0) console.log("No models available right now. (All busy or dead)");
+//     if (winners.length === 0) console.log("No models available right now. (All busy or dead)");
 
-    winners.forEach(w => {
-        // Color coding for terminal
-        const speed = w.latency < 500 ? '⚡ VERY FAST' : w.latency < 1500 ? '✅ FAST' : '🐢 SLOW';
-        console.log(`[${w.latency}ms] ${speed} \t ${w.id}`);
-    });
+//     winners.forEach(w => {
+//         // Color coding for terminal
+//         const speed = w.latency < 500 ? '⚡ VERY FAST' : w.latency < 1500 ? '✅ FAST' : '🐢 SLOW';
+//         console.log(`[${w.latency}ms] ${speed} \t ${w.id}`);
+//     });
 
-    console.log('\n=== ⚠️ RATE LIMITED / BUSY (Try again later) ===');
-    results.filter(r => r.code === 429).forEach(r => console.log(`⛔ ${r.id}`));
+//     console.log('\n=== ⚠️ RATE LIMITED / BUSY (Try again later) ===');
+//     results.filter(r => r.code === 429).forEach(r => console.log(`⛔ ${r.id}`));
 
-    console.log('\n=== 💀 DEAD / 404 (Remove from code) ===');
-    results.filter(r => r.code === 404).forEach(r => console.log(`❌ ${r.id}`));
+//     console.log('\n=== 💀 DEAD / 404 (Remove from code) ===');
+//     results.filter(r => r.code === 404).forEach(r => console.log(`❌ ${r.id}`));
 
 
-    return winners;
-}
+//     return winners;
+// }
 
 async function checkModelStatus(modelId, apiKey) {
   const startTime = Date.now();

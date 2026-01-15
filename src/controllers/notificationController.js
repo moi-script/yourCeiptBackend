@@ -44,6 +44,8 @@ export const markAllRead = async (req, res) => {
 export const createNotification = async (req, res) => {
     const {userId, title, message, type = 'info'} = req.body;
 
+    console.log("User id :: ", userId, " title : ", title, " message :: ", message, " type :: ", type);
+
     try {
         await Notification.create({ userId, title, message, type });
         console.log(`Notification created for ${userId}: ${title}`);

@@ -1,6 +1,6 @@
 import express from 'express';
 import { uploadParseText } from '../controllers/receiptController.js';
-import { extractText, quickParseText } from '../controllers/batchController.js';
+import {  quickParseText } from '../controllers/batchController.js'; // extractText,
 import { getAiModels, getUserModel, saveAiModel } from '../controllers/getAiModelsController.js';
 import { generatingSanitizePrompts, getImageItemUrl, getUploadImages, producingJsonOutput, validateFormat } from '../controllers/ocrController.js';
 import DemoReceipts from '../models/DemoReceipts.js'; // Import the new model
@@ -12,10 +12,10 @@ import { getRandomMock } from '../utils/mockData.js';
 const trigger = express.Router();
 
 
-trigger.get('/getText', extractText, (req, res) => {
-    console.log('Extracted text :: ', req.extractedText);
-    res.status(200).json({contents : req.extractedText, status : 200});
-})
+// trigger.get('/getText', extractText, (req, res) => {
+//     console.log('Extracted text :: ', req.extractedText);
+//     res.status(200).json({contents : req.extractedText, status : 200});
+// })
 
 
 trigger.post('/quickText', quickParseText, (req, res) => {

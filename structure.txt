@@ -25,3 +25,7 @@ my-express-app/
 ├── .gitignore
 ├── package.json
 └── server.js               # Entry point (starts the server)
+
+
+
+    // "test": "echo \"Error: no test specified\" && exit 1",

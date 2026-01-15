@@ -2,7 +2,7 @@ import { OpenRouter } from "@openrouter/sdk";
 import fs from 'fs';
 import { createWriteStream } from "fs";
 import path from "path";
-import { runParallelWorkers } from "../middleware/workers.js";
+// import { runParallelWorkers } from "../middleware/workers.js";
 import { jsonToObjOutput, allInputPrompts, aiPrompt, quickPrompt, filterItemsAiPrompt, reducedTextPromptTavily, findImagesWithTavily } from "../utils/jsonHandler.js";
 import { getAiKey, filterDirlist } from "../utils/getKey.js";
 import chalk from "chalk";
@@ -60,18 +60,18 @@ export function readTextAi(prompts, req, activeModelName = "kwaipilot/kat-coder-
 
 
 // initialize a parallel worker for both scribe and tesseract
-function workerParallelProcessList(source) {
-    const fileList = filterDirlist(source);
-    // console.log('File list --> ', fileList);
+// function workerParallelProcessList(source) {
+//     const fileList = filterDirlist(source);
+//     // console.log('File list --> ', fileList);
 
-    return Array.from({ length: fileList.length }, (_, i) => runParallelWorkers(path.parse(fileList[i]).name))
-}
+//     return Array.from({ length: fileList.length }, (_, i) => runParallelWorkers(path.parse(fileList[i]).name))
+// }
 
 // run both different worker  
 // const responseObject = await runParallelOcrTask(uploadDir) // turn on later
-export async function runParallelOcrTask(source) {
-    return await Promise.all(workerParallelProcessList(source))
-}
+// export async function runParallelOcrTask(source) {
+//     return await Promise.all(workerParallelProcessList(source))
+// }
 
 // get the text from worker that was parse using OCR alg
 // console.log(chalk.blue('Processing file list --> ',typeof filterDirlist(uploadDir)));

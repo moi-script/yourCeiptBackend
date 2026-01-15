@@ -1,4 +1,4 @@
-import { readParrallelAi, readOcrResponseTask, runParallelOcrTask, readDescriptionAi } from "../service/runAi.js";
+import {  readDescriptionAi } from "../service/runAi.js"; // runParallelOcrTask readOcrResponseTask, readParrallelAi 
 import uploadDir from "../utils/uploadDir.js";
 import { jsonToObjOutput } from "../utils/jsonHandler.js";
 import ora from 'ora';
@@ -11,45 +11,45 @@ const readDescriptionByAi = async (spinner, data, activeModelName = "kwaipilot/k
     return result;
 }
 
-export async function extractText(req, res, next) {
-    const spinner = ora('Scanning document...').start();
-    spinner.color = 'blue';
+// export async function extractText(req, res, next) {
+//     const spinner = ora('Scanning document...').start();
+//     spinner.color = 'blue';
 
-    const resObject = await runParallelOcrTask(uploadDir);
-    spinner.color = 'red';
-    spinner.text = 'Analyzing text with AI...';
+//     const resObject = await runParallelOcrTask(uploadDir);
+//     spinner.color = 'red';
+//     spinner.text = 'Analyzing text with AI...';
 
-    const attempts = async () => {
-        try {
-            const dataOutput = await readParrallelAi(await readOcrResponseTask(resObject));
-            console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
+//     const attempts = async () => {
+//         try {
+//             const dataOutput = await readParrallelAi(await readOcrResponseTask(resObject));
+//             console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
 
-            if (!dataOutput ||  (Array.isArray(dataOutput) && dataOutput.length === 0)){
-                 throw Error('Null value');
-            }
+//             if (!dataOutput ||  (Array.isArray(dataOutput) && dataOutput.length === 0)){
+//                  throw Error('Null value');
+//             }
 
-            try {
-                spinner.color = 'yellow';
-                spinner.text = 'Finalizing object';
-                // console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
-                const toObjectParse = jsonToObjOutput(dataOutput);
-                req.extractedText = toObjectParse;
-                spinner.color = 'green';
-                spinner.succeed('Text extracted');
+//             try {
+//                 spinner.color = 'yellow';
+//                 spinner.text = 'Finalizing object';
+//                 // console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
+//                 const toObjectParse = jsonToObjOutput(dataOutput);
+//                 req.extractedText = toObjectParse;
+//                 spinner.color = 'green';
+//                 spinner.succeed('Text extracted');
 
-                next();
-            } catch (err) {
-                console.error('Failed json conversion');
-                attempts();
-            }
+//                 next();
+//             } catch (err) {
+//                 console.error('Failed json conversion');
+//                 attempts();
+//             }
 
-        } catch (err) {
-            console.error(err);
-            attempts();
-        }
-    }
-    attempts();
-}
+//         } catch (err) {
+//             console.error(err);
+//             attempts();
+//         }
+//     }
+//     attempts();
+// }
 
 
 export async function quickParseText(req, res, next) {

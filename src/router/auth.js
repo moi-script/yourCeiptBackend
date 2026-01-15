@@ -1,7 +1,11 @@
 import express from 'express';
 import multer from 'multer';
 const router = express.Router();
-import { createUser, deleteUserAccount, getUserManualReceipts, getUserReceipts, resetPassword, sendOTP, updateCurrency, updateFullName, updateNearLimit, updateNickname, updateOverSpending, updateProfilePic, updateTheme, verifyOTP } from '../controllers/userController.js';
+import { createUser, deleteUserAccount, getUserManualReceipts, getUserReceipts, 
+    resetPassword, sendOTP, updateCurrency, updateFullName, updateNearLimit, 
+    updateNickname, updateOverSpending, updateProfilePic,
+     updateTheme, verifyOTP } from '../controllers/userController.js';
+     
 import { transformLogin } from '../middleware/transform.js';
 import { validateUserInput } from '../middleware/validator.js';
 import { sanitized } from '../middleware/validator.js';
