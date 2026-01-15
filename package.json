@@ -30,7 +30,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node server.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles"
   },
   "keywords": [],
