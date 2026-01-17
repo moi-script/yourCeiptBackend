@@ -58,9 +58,11 @@ const ReceiptSchema = z.object({
 
 // getting text from ocr using upload local path and azure 
 export const getUploadImages = async (req, res, next) => {
-
+    const { img } = req.body;
+    const buffer = JSON.parse(img).buffer
+    console.log("getUploadImages --> "  + buffer);
     try {
-        req.contents = await processImages() || [];
+        req.contents = await processImages(buffer, res) || [];
         next();
     } catch (err) {
         console.error("Unable to process image request", err);

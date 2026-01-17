@@ -29,22 +29,24 @@ const client = createClient(endpoint, credential);
 
 
 // handle multiple files and combined into single arrays
-export const processImages = async () => {
+export const processImages = async (buffer) => {
+
+    // const { img } = req.body;
     let contents = [];
+    console.log('Img buffer --> ', buffer);
     const fileList = fs.readdirSync(uploadDir);
     console.log('File list ::', fileList);
     
-
     const scanLocalImage = async (contents, file) => {
         console.log("Reading local file...");
 
-        const imageBuffer = fs.readFileSync(path.join(uploadDir, file));
+        const imageBuffer = buffer ?? fs.readFileSync(path.join(uploadDir, file));
         console.log('path local :: ', path.join(uploadDir, file));
-        console.log('Buffer result ::', imageBuffer);
+        console.log('Buffer result ::' +  Buffer.from(imageBuffer));
         console.log("Uploading to Azure...");
 
         const result = await client.path('/imageanalysis:analyze').post({
-            body: imageBuffer,
+            body: new Uint8Array(imageBuffer),
             queryParameters: {
                 features: ['read'],
                 language: 'en'

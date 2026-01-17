@@ -20,7 +20,7 @@ const AI_KEY = getAiKey();
 const aiOutput = createWriteStream('./outputAI.txt');
 
 
-export function readTextAi(prompts, req, activeModelName = "kwaipilot/kat-coder-pro:free") {
+export function readTextAi(prompts, req, activeModelName = "mistralai/devstral-2512:free") { // mistralai/devstral-2512:free // kwaipilot/kat-coder-pro:free
 
     console.log(chalk.blue("Using Model ---> " + activeModelName));
 

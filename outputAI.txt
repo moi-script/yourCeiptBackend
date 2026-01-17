@@ -1,0 +1,22 @@
+Understood! Please provide the receipt or invoice text, and I’ll extract the main item, clean its name, and generate a concise image search query (e.g., *"organic apples white background"* or *"wireless headphones white background"*).
+
+**Example Input:**
+```
+Items:
+1. Samsung Galaxy S23 Ultra 256GB (SM-S918B) - $1,199.99
+2. Silicone Case (Clear) - $29.99
+3. 65W Fast Charger - $49.99
+```
+
+**Output:**
+`Samsung Galaxy S23 Ultra white background`
+
+*(Note: I’ll prioritize the first/most expensive item, remove specs like "256GB" or "SM-S918B," and format it for image search.)*
+
+Go ahead and share the receipt text!Understood! Please provide the receipt or invoice text, and I will extract the main item, clean its name, and generate a concise image search query for it.
+
+Example input:
+*"1x Apple iPhone 15 Pro Max 256GB (A2849) - $1,199.00"*
+
+Example output:
+*"iPhone 15 Pro Max white background"*

@@ -84,4 +84,11 @@ files.post('/image', upload.single('image'), uploadCloudImage, (req, res) => {
 
 
 
+// possible to have multiple how to upadte that in
+files.post('/receiptImage', upload.single('image'), uploadCloudImage, (req, res) => {
+        res.json({ url: req.secure_url, public_url : req.public_url });
+})
+
+
+
 export default files;

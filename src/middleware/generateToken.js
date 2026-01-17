@@ -5,8 +5,7 @@ import jwt from 'jsonwebtoken';
 export const generateTokenAndSetCookie = (req, res, next) => {
 
     console.log(chalk.red('Generating token :: accessing user id :: ' + req.userId));
-
-
+    
     const token = jwt.sign({userId : req.userId}, process.env.JWT_SECRET_KEY, { expiresIn: '7hr' });
     const refreshToken = jwt.sign({userId : req.userId}, process.env.JWT_SECRET_KEY, { expiresIn: '7d' });
     
@@ -26,7 +25,6 @@ export const generateTokenAndSetCookie = (req, res, next) => {
         // secure: process.env.NODE_ENV !== 'development', // Use HTTPS in production
         secure : true,
         path : '/',
-
         maxAge: 60 * 60 * 1000 // 1hr
     });
     console.log('Cookie access ::', token);
