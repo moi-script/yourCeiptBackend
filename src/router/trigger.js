@@ -6,8 +6,11 @@ import { generatingSanitizePrompts, getImageItemUrl, getUploadImages, producingJ
 import DemoReceipts from '../models/DemoReceipts.js'; // Import the new model
 import { getRandomMock } from '../utils/mockData.js';
 // import { getUploadImages } from '../controllers/ocrController.js'; // Reuse your existing upload
+import multer from 'multer';
 
 
+
+const upload = multer();
 
 const trigger = express.Router();
 
@@ -32,7 +35,7 @@ trigger.post('/uploadQuick', uploadParseText, (req, res) => {
 
 })
 
-trigger.post('/azure', getUploadImages, getImageItemUrl, generatingSanitizePrompts, producingJsonOutput, validateFormat, (req, res) => {
+trigger.post('/azure',upload.single("image_buffer"), getUploadImages, getImageItemUrl, generatingSanitizePrompts, producingJsonOutput, validateFormat, (req, res) => {
     res.status(200).json({message : "Done extracting text", code : 200, contents : req.jsonResult});
 });
 

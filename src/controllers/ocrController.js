@@ -58,11 +58,15 @@ const ReceiptSchema = z.object({
 
 // getting text from ocr using upload local path and azure 
 export const getUploadImages = async (req, res, next) => {
-    const { img } = req.body;
-    const buffer = JSON.parse(img).buffer
-    console.log("getUploadImages --> "  + buffer);
+    const  image_buff  = req.file.buffer;
+
+    try {        
+    console.log("getUploadImages --> ", image_buff); 
+    } catch(err) {
+        console.error("Unable to parse img --> ", err);
+    }
     try {
-        req.contents = await processImages(buffer, res) || [];
+        req.contents = await processImages(image_buff, res) || [];
         next();
     } catch (err) {
         console.error("Unable to process image request", err);
@@ -126,6 +130,7 @@ export const generatingSanitizePrompts = (req, res, next) => {
 
 // convert all into valid json object
 export const producingJsonOutput = async (req, res, next) => {
+    console.log(chalk.blue('File form data --> ', ))
     try {
         const { activeModelName } = req.body;
         console.log(chalk.red('Model name ::' + activeModelName));
