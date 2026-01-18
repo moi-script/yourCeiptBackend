@@ -46,7 +46,7 @@ export const uploadCloudImage = async (req, res, next) => {
         next();
     } catch (error) {
         console.error(error);
-        res.status(500).send("Upload failed");
+        res.status(500).send("Upload failed" + error);
     }
 };
 

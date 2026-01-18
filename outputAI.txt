@@ -12,7 +12,7 @@ Mega Fries white background```json
   },
   "transaction": {
     "store_number": "00114",
-    "operator_number": "1MOBIZ, INC.",
+    "operator_number": "169070",
     "terminal_number": "NM2XMAXF2252",
     "transaction_number": "169070"
   },
