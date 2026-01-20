@@ -8,29 +8,33 @@ import fs from 'fs';
 const files = express.Router();
 import uploadDir from '../utils/uploadDir.js';
 import { clearFolder } from '../utils/getKey.js';
-import { deleteCloudImage, uploadCloudImage } from '../controllers/cloudinaryController.js';
+import { deleteCloudImage, uploadCloudImage, uploadCloudImageStream } from '../controllers/cloudinaryController.js';
 
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    limits: { fileSize: 2000000 },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image file (jpg, jpeg, or png)'));
-        }
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'uploads/');
+//     },
+//     limits: { fileSize: 2000000 },
+//     fileFilter(req, file, cb) {
+//         if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+//             return cb(new Error('Please upload an image file (jpg, jpeg, or png)'));
+//         }
 
-        cb(undefined, true);
-    },
+//         cb(undefined, true);
+//     },
 
-    filename: (req, file, cb) => {
-        const newFile = Date.now() + '-' + file.originalname.replaceAll(" ", "");
+//     filename: (req, file, cb) => {
+//         const newFile = Date.now() + '-' + file.originalname.replaceAll(" ", "");
         
-        // change the file extension to .png
-        cb(null, newFile.replaceAll(new RegExp(path.parse(newFile).ext, "g"), ".png")); 
-    }
-});
+//         // change the file extension to .png
+//         cb(null, newFile.replaceAll(new RegExp(path.parse(newFile).ext, "g"), ".png")); 
+//     }
+// });
+
+
+const storage = multer.memoryStorage();
+// const upload = multer({ storage: storage });
 
 const upload = multer({ storage: storage });
 
@@ -48,7 +52,6 @@ files.post('/upload', upload.array('myImages'), (req, res) => {
 });
 
 export const imgHandler = (req, res) => {
-
     const filename = req.params.filename; // Gets "image.jpg" from the URL
     const filePath = path.join(uploadDir, filename);
 
@@ -77,18 +80,23 @@ files.delete('/image', deleteCloudImage, async (req, res) => {
 
 
 
-files.post('/image', upload.single('image'), uploadCloudImage, (req, res) => {
-    res.json({ url: req.secure_url, public_url : req.public_url });
-})
+files.post('/image', upload.single('image'), uploadCloudImage)
 
 
 
+// const liveTest = async (req, res) => {
+//     try  {
+//         upload.single('image')
+//     } catch(err) {
+//         console.log("Unalbe to have upload.single")
+//     }
+// } 
 
 // possible to have multiple how to upadte that in
-files.post('/receiptImage', upload.single('image'), uploadCloudImage, (req, res) => {
-        res.json({ url: req.secure_url, public_url : req.public_url });
-})
+// files.post('/receiptImage', upload.single('image'), uploadCloudImage, (req, res) => {
+//         res.json({ url: req.secure_url, public_url : req.public_url });
+// })
 
-
+files.post('/receipt-image-cloud', upload.single("image"), uploadCloudImageStream);
 
 export default files;

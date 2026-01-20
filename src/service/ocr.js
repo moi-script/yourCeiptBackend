@@ -33,27 +33,27 @@ export const processImages = async (buffer) => {
 
     // const { img } = req.body;
     let contents = [];
-    console.log('Img buffer --> ', buffer);
-    const fileList = fs.readdirSync(uploadDir);
-    console.log('File list ::', fileList);
+    // console.log('Img buffer --> ', buffer);
+    // const fileList = fs.readdirSync(uploadDir);
+    // console.log('File list ::', fileList);
     
     const scanLocalImage = async (contents, file) => {
         console.log("Reading local file...");
 
-        const imageBuffer = buffer ?? fs.readFileSync(path.join(uploadDir, file));
-        console.log('path local :: ', path.join(uploadDir, file));
-        console.log('Buffer result ::' +  Buffer.from(imageBuffer));
+        // const imageBuffer = buffer ?? fs.readFileSync(path.join(uploadDir, file));
+        // console.log('path local :: ', path.join(uploadDir, file));
+        // console.log('Buffer result ::' +  Buffer.from(imageBuffer));
         console.log("Uploading to Azure...");
 
         const result = await client.path('/imageanalysis:analyze').post({
-            body: new Uint8Array(imageBuffer),
+            body: new Uint8Array(buffer),
             queryParameters: {
                 features: ['read'],
                 language: 'en'
             },
             contentType: 'application/octet-stream'
         });
-        console.log('eror here');
+        // console.log('error here');
 
         if (isUnexpected(result)) {
             console.error("Error:", result.body.error);
@@ -76,27 +76,28 @@ export const processImages = async (buffer) => {
         }
     }
 
-    if (!(fileList.length > 0)) {
-        throw new Error('Does not have local file exist');
-    }
+    // if (!(fileList.length > 0)) {
+    //     throw new Error('Does not have local file exist');
+    // }
 
-    // const spinner = ora('Scanning Documents').start();
-    // spinner.color = 'blue';
+    // // const spinner = ora('Scanning Documents').start();
+    // // spinner.color = 'blue';
 
-    for (let i = 0; i < fileList.length; i++) {
-            console.log('Top this ::', i);
+    // for (let i = 0; i < fileList.length; i++) {
+    //         console.log('Top this ::', i);
 
-        try {
+    //     try {
 
-            await scanLocalImage(contents, fileList[i]);
-            console.log('Process this ::', i);
-        } catch (err) {
-            console.error('Unable to scan image :: ', err);
-        }
-    }
+    //         console.log('Process this ::', i);
+    //     } catch (err) {
+    //         console.error('Unable to scan image :: ', err);
+    //     }
+    // }
 
     // spinner.color = 'green';
     // spinner.succeed("Done extracting text");
+
+            await scanLocalImage(contents);
 
     console.log('Contents -> processImages ', contents);
     clearFolder(uploadDir);
