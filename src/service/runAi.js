@@ -6,21 +6,18 @@ import path from "path";
 import { jsonToObjOutput, allInputPrompts, aiPrompt, quickPrompt, filterItemsAiPrompt, reducedTextPromptTavily, findImagesWithTavily } from "../utils/jsonHandler.js";
 import { getAiKey, filterDirlist } from "../utils/getKey.js";
 import chalk from "chalk";
-
+import { getDefaultModel } from "../utils/getKey.js";
 
 
 // flow
 // runParallelOcrTask -> readOcrResponseTask ->  readParrallelAi -> output
 
 
-
-
-
 const AI_KEY = getAiKey();
 const aiOutput = createWriteStream('./outputAI.txt');
 
 
-export function readTextAi(prompts, req, activeModelName = "mistralai/devstral-2512:free") { // mistralai/devstral-2512:free // kwaipilot/kat-coder-pro:free
+export function readTextAi(prompts, req, activeModelName = getDefaultModel()) { // mistralai/devstral-2512:free // kwaipilot/kat-coder-pro:free
 
     console.log(chalk.blue("Using Model ---> " + activeModelName));
 

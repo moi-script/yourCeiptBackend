@@ -2,8 +2,9 @@ import {  readDescriptionAi } from "../service/runAi.js"; // runParallelOcrTask 
 import uploadDir from "../utils/uploadDir.js";
 import { jsonToObjOutput } from "../utils/jsonHandler.js";
 import ora from 'ora';
+import { getDefaultModel } from "../utils/getKey.js";
 
-const readDescriptionByAi = async (spinner, data, activeModelName = "kwaipilot/kat-coder-pro:free") => {
+const readDescriptionByAi = async (spinner, data, activeModelName = getDefaultModel()) => {
     spinner.color = 'red';
     spinner.text = 'Analyzing text with AI...';
     const result = await readDescriptionAi(data, activeModelName);

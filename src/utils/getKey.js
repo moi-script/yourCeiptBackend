@@ -67,6 +67,8 @@ export const getEMAIL = () => process.env.EMAIL_USER;
 export const getPASS = () => process.env.EMAIL_PASS;
 
 
+export const getDefaultModel = () => process.env.DEFAULT_MODEL;
+
 // clearFolder(uploadDir);
 
 // console.log(process.cwd())
