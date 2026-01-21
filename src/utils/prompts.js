@@ -57,6 +57,7 @@ export const handleReceiptFormatPrompts = (ocrText, image_source) => {
         - Combine split lines that belong together (item name + price)
         - Remove symbols like ·, +, B from item names
         - Look for patterns: "quantity X price" then "item name" then "total"
+        - The available currency should only be PHP or Philippine Peso 
         - If category is missing, assign one: [Groceries, Housing, Transportation, Dining, Utilities, Income, Healthcare, Entertainment, Other]
         - For image_source: randomly pick ONE url from: ${image_source}
 

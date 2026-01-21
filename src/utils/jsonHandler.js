@@ -28,8 +28,7 @@ export const processItems = (data) => {
 
 export async function aiPrompt(scribe, tesseract = "", imageSource) {
   try {
-    // const imageSource = await findImagesWithTavily(scribe + tesseract);
-    console.log('Image source :: ', imageSource);
+    // console.log('Image source :: ', imageSource);
 
     const format = {
       "store": null,
@@ -251,81 +250,6 @@ export async function quickPrompt(textInput, imageSource) {
       "image_source": null
     }
   }
-  
-  // return `
-  //   You are a financial extraction assistant.  
-  //   Your task is to analyze user-provided data (image receipts, text expense inputs, or files such as PDF/CSV/DOCX) and convert them into a structured JSON object following the exact schema below.
-
-  //       Always follow these rules:
-  //       1. Think step-by-step before outputting.
-  //       2. Identify the input type: IMAGE, TEXT, or DOCUMENT FILE.
-  //       3. Detect currency, date, time, and language automatically.
-  //       4. Extract expenses strictly based on what the user provides. Do not guess.
-  //       5. If data is missing, return null for that field.
-  //       6. For items, extract as many as appear in the input.
-  //       7. It must contains category, auto pick a matching category [food, transportation, entertainment, shopping, utilities, income, healthcare, other] base on item, otherwise return other
-  //       8. Never change the schema. Never add new keys.
-  //       9. Make sure to convert into a json format no other result
-  //       This is the JSON format you must output:
-  //       10. You must avoid creativity. You must avoid assumptions. Be literal and extraction-only.
-  //       11. Only extract items that clearly exist in the input. Do not infer or guess items.
-  //       12. JSon should be json(object)
-  //       ${JSON.stringify(format)}
-
-  //       input -> ${textInput}
-
-  //       when you encounter a "items": [
-  //           {
-  //               "description": null, put the description here
-  //               "upc": null,
-  //               "type": null,
-  //               "price": null,
-  //               "quantity": null
-  //           }
-  //           put the description into the notes
-
-
-  //           "image_source": insert a any single url from this source ${imageSource} to this image_source 
-  //            "metadata": {
-  //           "currency": null,
-  //           "datetime": null, //if no date is provided put this into a date -> ${date}
-  //           "notes": null,
-  //           "type" : null, the transaction type here is only either Income or Expense
-  //           "image_source": null
-  //       } of meta data 
-
-
-  //       if encounter simple sentence, saved that kind of into json form and when other is not existed
-  //       set them into null property
-
-  //       if there was no subtotal or total atleast put the price of an item into the subtotal or total
-
-  //       if possible translate them all into english
-
-  //       Requirements:
-  //       1. Enclose the entire JSON output in underscores (_) at the start and end.
-  //       2. Fill all "price" fields with the correct currency symbol based on the country:
-  //          - USA
-  //          - EUR
-  //          - UK 
-  //          - JPY
-  //          - GBP
-  //          - PHP
-  //          - Others -> automatically convert it analyzing their currency to ISO 4217
-  //       3. Ensure all fields in the format template are respected.
-  //       4. Only output the JSON wrapped in underscores (_), do not include any extra text.
-        
-  //       Extraction Rules:
-
-  //       - Currency: Detect automatically (e.g., PHP, USD, EUR).
-  //       - Datetime: Extract exact format from receipt or text if found.
-  //       - If input is a plain text budget list, set source_type = "text".
-  //       - If input is an image or file, set source_type appropriately.
-  //       - Must only follow the format avoid creating or deleting properties
-  //       - If total is not provided, compute if possible (sum items + tax).
-  //       - Prices must use numeric values only (no currency symbols).
-  //       - Return JSON only, no explanations.
-  //   `;
 return `
 You are a financial extraction assistant.
 
@@ -367,7 +291,7 @@ Output Requirements:
 2. Return JSON object only — no extra text.
 
 Extraction Rules:
-- Currency and datetime must be exact if found.
+- Currency should be PHP or philippine peso only and datetime must be exact if found.
 - If input is a simple sentence, map values and set others to null.
 - If total is missing, compute when possible.
 - Never infer missing items.

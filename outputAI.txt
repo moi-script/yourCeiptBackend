@@ -1,0 +1,100 @@
+```json
+{
+  "store": null,
+  "slogan": null,
+  "contact": null,
+  "manager": null,
+  "address": {
+    "street": null,
+    "city": null,
+    "state": null,
+    "zip": null
+  },
+  "transaction": {
+    "store_number": null,
+    "operator_number": null,
+    "terminal_number": null,
+    "transaction_number": null
+  },
+  "items": [
+    {
+      "description": "1kilo rice",
+      "upc": null,
+      "type": null,
+      "category": "food",
+      "price": null,
+      "quantity": null
+    },
+    {
+      "description": "1kilo chicken",
+      "upc": null,
+      "type": null,
+      "category": "food",
+      "price": null,
+      "quantity": null
+    },
+    {
+      "description": "1pack coffee",
+      "upc": null,
+      "type": null,
+      "category": "food",
+      "price": null,
+      "quantity": null
+    },
+    {
+      "description": "1can sterilized milk",
+      "upc": null,
+      "type": null,
+      "category": "food",
+      "price": null,
+      "quantity": null
+    },
+    {
+      "description": "transportation",
+      "upc": null,
+      "type": null,
+      "category": "transportation",
+      "price": null,
+      "quantity": null
+    },
+    {
+      "description": "1/2kilo tomato",
+      "upc": null,
+      "type": null,
+      "category": "food",
+      "price": null,
+      "quantity": null
+    },
+    {
+      "description": "1/2 onions",
+      "upc": null,
+      "type": null,
+      "category": "food",
+      "price": null,
+      "quantity": null
+    },
+    {
+      "description": "1/3 garlic",
+      "upc": null,
+      "type": null,
+      "category": "food",
+      "price": null,
+      "quantity": null
+    }
+  ],
+  "subtotal": null,
+  "tax_rate": null,
+  "tax_amount": null,
+  "total": 7000,
+  "payment_method": null,
+  "amount_paid": null,
+  "metadata": {
+    "currency": "PHP",
+    "datetime": "Thu Jan 22 2026 07:48:18 GMT+0800 (China Standard Time)",
+    "notes": "1kilo rice 1kilo chicken 1pack coffee 1can sterilized milk transportation 1/2kilo tomato 1/2 onions 1/3 garlic 7000 total",
+    "source_type": "text",
+    "type": "Expense",
+    "image_source": null
+  }
+}
+```
