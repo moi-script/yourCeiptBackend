@@ -12,49 +12,9 @@ const readDescriptionByAi = async (spinner, data, activeModelName = getDefaultMo
     return result;
 }
 
-// export async function extractText(req, res, next) {
-//     const spinner = ora('Scanning document...').start();
-//     spinner.color = 'blue';
-
-//     const resObject = await runParallelOcrTask(uploadDir);
-//     spinner.color = 'red';
-//     spinner.text = 'Analyzing text with AI...';
-
-//     const attempts = async () => {
-//         try {
-//             const dataOutput = await readParrallelAi(await readOcrResponseTask(resObject));
-//             console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
-
-//             if (!dataOutput ||  (Array.isArray(dataOutput) && dataOutput.length === 0)){
-//                  throw Error('Null value');
-//             }
-
-//             try {
-//                 spinner.color = 'yellow';
-//                 spinner.text = 'Finalizing object';
-//                 // console.log('to json --> ', dataOutput, ' type ', typeof dataOutput);
-//                 const toObjectParse = jsonToObjOutput(dataOutput);
-//                 req.extractedText = toObjectParse;
-//                 spinner.color = 'green';
-//                 spinner.succeed('Text extracted');
-
-//                 next();
-//             } catch (err) {
-//                 console.error('Failed json conversion');
-//                 attempts();
-//             }
-
-//         } catch (err) {
-//             console.error(err);
-//             attempts();
-//         }
-//     }
-//     attempts();
-// }
-
-
+// needs to fix the repitiion and just return pure json object form ai
 export async function quickParseText(req, res, next) {
-    console.log('Req body :: ', req.body);
+    // console.log('Req body :: ', req.body);
     const { quickText, activeModelName } = req.body;
 
     if (quickText) {

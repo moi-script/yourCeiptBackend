@@ -25,6 +25,7 @@ export const createUser = async (req, res, next) => {
   console.log('Creating user :: ');
   const { nickname, fullname, email, password, overSpending, currency, image_profile, image_public_url, theme, nearLimit } = req.body;
 
+  // console.log(nickname, fullname, email, password, overSpending, currency, image_profile, image_public_url, theme, nearLimit)
 
   if (!password || typeof password !== 'string') {
     return res.status(400).json({ error: 'Invalid password' });

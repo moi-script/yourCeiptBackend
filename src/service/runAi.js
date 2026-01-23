@@ -97,15 +97,18 @@ export async function readOcrResponseTask(response) {
 export async function descriptionWithPrompt(description) {
     const imageQuery = await findImagesWithTavily(description);
     console.log('Image query ::', imageQuery);
-    const prompt =  await quickPrompt(description, (imageQuery || null));
+    const prompt = quickPrompt(description, (imageQuery ?? null));
 
-    console.log(chalk.blue('Prompt --> ', prompt));
+    // console.log(chalk.blue('Prompt --> ', prompt));
     return prompt;
 }
 
 export async function readDescriptionAi(prompt, activeModelName) {
+    
     const readingText = readTextAi(await descriptionWithPrompt(prompt), null, activeModelName);
-    return await readingText();
+    const ouptutText = await readingText();
+    console.log('Text output --> ', ouptutText);
+    return ouptutText;
 }
 // get the iterable promp list with a parse text 
 
