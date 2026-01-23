@@ -97,36 +97,27 @@ export const getImageItemUrl = async (req, res, next) => {
             console.log('Retrying ...');
             getImageItemUrl(req, res, next);
         } else {
-            res.status(500).json({ message: "Unable to get image url", code: 500, error: err });
-            console.error(err);
-
+            console.log('Proceding to next');
+            req.images_url = null;
+            next();
+            // res.status(500).json({ message: "Unable to get image url", code: 500, error: err });
+            // console.error(err);
         }
+
     }
 }
 
 
 // combined into specific receipt format prompts to be more accurate
 export const generatingSanitizePrompts = (req, res, next) => {
-
     try {
-        // req.contens -> array 
-        // req.images_url -> array
-        // console.log('req.contents.length ->', req.contents.length);
-        // console.log('req.images_url.length ->', req.contents.length);
-
-        if (req.contents.length > 0 && req.images_url?.length > 0) {
-            console.log('true');
+        if(req.contents.length === 0) throw new Error("No Contents");
             req.prompts = handleReceiptFormatPrompts(req.contents, req.images_url);
-
-            next();
-
-        }
-        // ocrText, format, image_source
+            next();     
     } catch (err) {
         console.error('Unable to sanizite prompts');
     }
 }
-
 
 // convert all into valid json object
 export const producingJsonOutput = async (req, res, next) => {
