@@ -5,6 +5,7 @@ import { handleReceiptFormatPrompts } from "../utils/prompts.js";
 import { readTextAi } from "../service/runAi.js";
 import { z } from 'zod';
 import chalk from "chalk";
+import { defaultAi } from "../service/defaultAi.js";
 const ReceiptSchema = z.object({
     store: z.string().nullable(),
     slogan: z.string().nullable(),
@@ -119,6 +120,20 @@ export const generatingSanitizePrompts = (req, res, next) => {
     }
 }
 
+
+// export const defaultAi = async (prompt) => {
+//  try {
+//             console.log('prompt :: return a object value for this ', prompt);
+//             const result = await model.generateContent(prompt);
+//             const response = await result.response;
+
+//             res.json({ text: response.text() });
+//         } catch (error) {
+//             console.log('Err ;:', error)
+//             res.status(500).json({ error: "AI failed to respond" });
+//         }
+// }
+
 // convert all into valid json object
 export const producingJsonOutput = async (req, res, next) => {
     console.log(chalk.blue('File form data --> ', ))
@@ -127,15 +142,19 @@ export const producingJsonOutput = async (req, res, next) => {
         console.log(chalk.red('Model name ::' + activeModelName));
 
         // console.log('Prompts ::', req.prompts);
-        req.output = await readTextAi(req.prompts, req, activeModelName)();
+        req.output = await defaultAi(req.prompts);
 
+        // req.output
         console.log(chalk.blue('output --> ' + req.output));
-
         next();
     } catch (err) {
-        console.error('Unable to read prompts', err);
-        res.status(500).json({ message: "Failed to read prompts", code: 500 });
-
+        try {
+            req.output = await readTextAi(req.prompts, req, activeModelName)();
+            next()
+        } catch(err) {
+            console.error('Unable to read prompts', err);
+            res.status(500).json({ message: "Failed to read prompts", code: 500 });
+        }
     }
 }
 

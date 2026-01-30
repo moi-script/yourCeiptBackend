@@ -19,9 +19,13 @@ export async function quickParseText(req, res, next) {
 
     if (quickText) {
         const spinner = ora('Scanning text description').start();
+
+
         const attempts = async () => {
             try {
                 const struct = await readDescriptionByAi(spinner, quickText, activeModelName);
+                // const struct = await defaultAi(quickText);
+                
                 if (!struct || !(typeof jsonToObjOutput(struct))) throw Error('Null result');
                 else {
                     spinner.color = 'green';

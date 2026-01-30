@@ -1,6 +1,6 @@
 
 export const handleReceiptFormatPrompts = (ocrText, image_source) => {
-
+    console.log('This is image source for handling image receipt formats :: ', image_source);
     const formatDate = new Date().toISOString();
     const format = {
         "store": "String",
@@ -59,7 +59,7 @@ export const handleReceiptFormatPrompts = (ocrText, image_source) => {
         - Look for patterns: "quantity X price" then "item name" then "total"
         - The available currency should only be PHP or Philippine Peso 
         - If category is missing, assign one: [Groceries, Housing, Transportation, Dining, Utilities, Income, Healthcare, Entertainment, Other]
-        - For image_source: randomly pick ONE url from: ${image_source}
+        - For image_source: randomly pick ONE url from: ${image_source} if null then put null for image source
 
         OUTPUT FORMAT:
         ${JSON.stringify(format, null, 2)}

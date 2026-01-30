@@ -7,6 +7,7 @@ import { jsonToObjOutput, allInputPrompts, aiPrompt, quickPrompt, filterItemsAiP
 import { getAiKey, filterDirlist } from "../utils/getKey.js";
 import chalk from "chalk";
 import { getDefaultModel } from "../utils/getKey.js";
+import { defaultAi } from "./defaultAi.js";
 
 
 // flow
@@ -103,12 +104,24 @@ export async function descriptionWithPrompt(description) {
     return prompt;
 }
 
+
 export async function readDescriptionAi(prompt, activeModelName) {
-    
-    const readingText = readTextAi(await descriptionWithPrompt(prompt), null, activeModelName);
-    const ouptutText = await readingText();
-    console.log('Text output --> ', ouptutText);
-    return ouptutText;
+    try {
+        // throw Error("Test error");
+        const readingText = readTextAi(await descriptionWithPrompt(prompt), null, activeModelName);
+        const ouptutText = await readingText();
+        // console.log('Text output --> ', ouptutText);
+        return ouptutText;
+
+    } catch(err) {
+        try {
+            const res = await defaultAi(await descriptionWithPrompt(prompt));
+            return res;
+        } catch(err) {
+            console.error('Unable to read by ai');
+        }
+    }
+   
 }
 // get the iterable promp list with a parse text 
 

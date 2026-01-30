@@ -50,8 +50,11 @@ app.use(cookieParser());
 
 await connectDB();
 
+import { request } from './src/service/defaultAi.js';
 // for user auth or validation
 app.use('/user', router);
+
+app.use("/test/api/chat", request)
 
 // accepts uploading data input
 app.use('/', files);

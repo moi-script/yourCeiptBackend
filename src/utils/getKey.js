@@ -69,6 +69,8 @@ export const getPASS = () => process.env.EMAIL_PASS;
 
 export const getDefaultModel = () => process.env.DEFAULT_MODEL;
 
+
+export const getGeminiKey =() => process.env.GEMINI_KEY;
 // clearFolder(uploadDir);
 
 // console.log(process.cwd())
