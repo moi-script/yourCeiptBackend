@@ -86,7 +86,6 @@ export const getUserManualReceipts = async (req, res, next) => {
 
 export const userAuth = async (req, res, next) => { // needed to parse the incomming request in userAuth
   console.log('User auth email :: ', req.body.email);
-  console.log('User auth password:: ', req.body.password);
 
   const user = await User.findOne({ email: req.body.email });
 
@@ -98,7 +97,6 @@ export const userAuth = async (req, res, next) => { // needed to parse the incom
       // populate userId from db to passed for jwt
       req.userId = user._id;
       req.user = await User.findOne({ _id: user._id }).select('fullname nickname email _id, currency theme nearLimit overSpending image_profile image_public_url').lean();
-      console.log('Req user for user auth ::', req.user);
       next();
 
     } else {

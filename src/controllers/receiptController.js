@@ -1,4 +1,3 @@
-import ora from "ora";
 import Receipt from "../models/Receipt.js";
 
 
@@ -54,10 +53,8 @@ export const uploadParseText = async (req, res, next) => {
     req.saved = upload;
     next();
   } catch (err) {
-    console.error('Unable to upload to db');
-
-
-
+    console.error('Unable to upload to db', err.message);
+    res.status(500).json({ message: "Failed to save receipt", status: 500 });
   }
 }
 

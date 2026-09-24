@@ -21,7 +21,8 @@ export const verifyToken = async (req, res, next) => {
 
         try {
             // req.user = await User.findOne({_id : decoded.userId }).select('fullname nickname email _id currency theme overSpending nearLimit image_profile');
-            req.user = await User.findOne({_id : decoded.userId })
+            // Never send the password hash (or reset OTP) to the browser.
+            req.user = await User.findOne({_id : decoded.userId }).select('-password -otp -otpExpires').lean()
             
             // console.log('Req user after verifying ', req.user);
 

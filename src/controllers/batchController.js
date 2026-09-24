@@ -1,54 +1,41 @@
-import {  readDescriptionAi } from "../service/runAi.js"; // runParallelOcrTask readOcrResponseTask, readParrallelAi 
-import uploadDir from "../utils/uploadDir.js";
-import { jsonToObjOutput } from "../utils/jsonHandler.js";
-import ora from 'ora';
-import { getDefaultModel } from "../utils/getKey.js";
+import { completeJson } from "../service/llm.js";
+import { buildImageQuery, findProductImage } from "../service/productImage.js";
+import { quickTextPrompt } from "../utils/prompts.js";
+import { normalizeReceipt, assertUsableReceipt } from "../utils/receiptNormalize.js";
 
-const readDescriptionByAi = async (spinner, data, activeModelName = getDefaultModel()) => {
-    spinner.color = 'red';
-    spinner.text = 'Analyzing text with AI...';
-    const result = await readDescriptionAi(data, activeModelName);
-    spinner.clear();
-    return result;
-}
+const MAX_TEXT = 2000;
 
-// needs to fix the repitiion and just return pure json object form ai
+// Turns a typed note ("lunch at jollibee 250") into a receipt object.
+// The old version retried forever when a model failed; completeJson now
+// walks a bounded fallback chain instead.
 export async function quickParseText(req, res, next) {
-    // console.log('Req body :: ', req.body);
-    const { quickText, activeModelName } = req.body;
+  const { quickText, activeModelName } = req.body || {};
+  const text = typeof quickText === "string" ? quickText.trim() : "";
 
-    if (quickText) {
-        const spinner = ora('Scanning text description').start();
+  if (!text) return res.status(400).json({ message: "Type something to parse first.", status: 400 });
+  if (text.length > MAX_TEXT) {
+    return res.status(413).json({ message: `Keep it under ${MAX_TEXT} characters.`, status: 413 });
+  }
 
-
-        const attempts = async () => {
-            try {
-                const struct = await readDescriptionByAi(spinner, quickText, activeModelName);
-                // const struct = await defaultAi(quickText);
-                
-                if (!struct || !(typeof jsonToObjOutput(struct))) throw Error('Null result');
-                else {
-                    spinner.color = 'green';
-                    spinner.succeed('Text extracted');
-
-                    try {
-                        req.output = jsonToObjOutput(struct);
-                        next();
-
-                    } catch (err) {
-                        console.log('Error json conversion');
-                        attempts();
-                    }
-                }
-            } catch (err) {
-                console.error('Failed read quick text', err);
-                attempts();
-            }
-        }
-        attempts();
-
-    } else {
-        console.error('No Quick text contents');
-    }
+  const timings = {};
+  let started = Date.now();
+  try {
+    const { data, model } = await completeJson(quickTextPrompt(text), {
+      preferredModel: activeModelName,
+      validate: assertUsableReceipt,
+    });
+    const receipt = normalizeReceipt(data, { sourceType: "text" });
+    receipt.metadata.notes = receipt.metadata.notes || text;
+    timings.ai = Date.now() - started;
+    started = Date.now();
+    receipt.metadata.image_source = await findProductImage(buildImageQuery(receipt));
+    timings.image = Date.now() - started;
+    req.timings = timings;
+    req.output = receipt;
+    req.modelUsed = model;
+    next();
+  } catch (err) {
+    console.error("[quickText] every model failed", err.attempts);
+    res.status(503).json({ message: "The AI models are busy right now. Please try again shortly.", status: 503 });
+  }
 }
-

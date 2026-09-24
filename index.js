@@ -50,11 +50,9 @@ app.use(cookieParser());
 
 await connectDB();
 
-import { request } from './src/service/defaultAi.js';
+import { refreshModels } from './src/service/modelRegistry.js';
 // for user auth or validation
 app.use('/user', router);
-
-app.use("/test/api/chat", request)
 
 // accepts uploading data input
 app.use('/', files);
@@ -89,7 +87,22 @@ app.get('/user/register', (req, res) => {
 
 
 
-app.listen(process.env.PORT, () => console.log('Server is running at port :: ' + process.env.PORT));
+// Multer and body-parser errors otherwise come back as an HTML 500.
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  if (err instanceof multer.MulterError) {
+    const message = err.code === 'LIMIT_FILE_SIZE' ? 'That image is too large. Try a smaller photo.' : err.message;
+    return res.status(413).json({ message, code: 413 });
+  }
+  console.error(err);
+  res.status(err.status || 500).json({ message: 'Something went wrong on our side.', code: err.status || 500 });
+});
+
+app.listen(process.env.PORT, () => {
+  console.log('Server is running at port :: ' + process.env.PORT);
+  // Warm the model list so the first visitor doesn't wait for probes.
+  refreshModels();
+});
 
 
 process.on('SIGINT', async () => {

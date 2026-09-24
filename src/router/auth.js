@@ -14,7 +14,6 @@ import rateLimit from 'express-rate-limit';
 import { generateTokenAndSetCookie } from '../middleware/generateToken.js';
 import { verifyToken } from '../middleware/verifyToken.js';
 import chalk from 'chalk';
-import { getFastFreeModel } from '../service/getFreeModels.js';
 
 // rateLimit, for production test
 

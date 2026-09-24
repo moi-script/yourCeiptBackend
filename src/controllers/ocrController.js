@@ -1,188 +1,76 @@
 import { processImages } from "../service/ocr.js";
-import { filterItemQuickParser } from "../utils/jsonHandler.js";
-import { findImagesWithTavily } from "../utils/jsonHandler.js";
-import { handleReceiptFormatPrompts } from "../utils/prompts.js";
-import { readTextAi } from "../service/runAi.js";
-import { z } from 'zod';
-import chalk from "chalk";
-import { defaultAi } from "../service/defaultAi.js";
-const ReceiptSchema = z.object({
-    store: z.string().nullable(),
-    slogan: z.string().nullable(),
-    contact: z.string().nullable(),
-    manager: z.string().nullable(),
+import { completeJson } from "../service/llm.js";
+import { buildImageQuery, findProductImage } from "../service/productImage.js";
+import { receiptImagePrompt } from "../utils/prompts.js";
+import { normalizeReceipt, assertUsableReceipt } from "../utils/receiptNormalize.js";
 
-    address: z.object({
-        street: z.string().nullable(),
-        city: z.string().nullable(),
-        state: z.string().nullable(),
-        zip: z.string().nullable()
-    }),
-
-    transaction: z.object({
-        store_number: z.string().nullable(),
-        operator_number: z.string().nullable(),
-        terminal_number: z.string().nullable(),
-        transaction_number: z.string().nullable()
-    }),
-
-    items: z.array(
-        z.object({
-            description: z.string().nullable(),
-            upc: z.string().nullable(),
-            type: z.string().nullable(),
-            category: z.string().nullable(),
-            price: z.number().nullable(),
-            quantity: z.number().nullable()
-        })
-    ),
-
-    subtotal: z.number().nullable(),
-    tax_rate: z.number().nullable(),
-    tax_amount: z.number().nullable(),
-    total: z.number().nullable(),
-    payment_method: z.string().nullable(),
-    amount_paid: z.number().nullable(),
-
-    metadata: z.object({
-        currency: z.string().nullable(),
-        datetime: z.string().nullable(),
-        notes: z.string().nullable(),
-        source_type: z.string().nullable(),
-        type: z.string().nullable(),
-        image_source: z.string().nullable(),
-
-    })
-});
-
-
-
-// getting text from ocr using upload local path and azure 
+// Step 1: Azure Read turns the photo into text lines.
 export const getUploadImages = async (req, res, next) => {
-    const  image_buff  = req.file.buffer;
+  if (!req.file?.buffer?.length) {
+    return res.status(400).json({ message: "Attach a receipt image as 'image_buffer'.", code: 400 });
+  }
 
-    try {        
-    console.log("getUploadImages --> ", image_buff); 
-    } catch(err) {
-        console.error("Unable to parse img --> ", err);
+  req.timings = {};
+  const started = Date.now();
+  try {
+    req.contents = await processImages(req.file.buffer);
+    req.timings.ocr = Date.now() - started;
+  } catch (err) {
+    console.error("[ocr] Azure failed:", err.message);
+    if (err.badImage) {
+      return res.status(422).json({ message: "That file couldn't be opened as a photo. Try a JPG or PNG.", code: 422 });
     }
-    try {
-        req.contents = await processImages(image_buff, res) || [];
-        next();
-    } catch (err) {
-        console.error("Unable to process image request", err);
-        res.status(500).json({ message: "Unable to process request", code: 500 });
-    }
-}
+    return res.status(502).json({ message: "Couldn't read the image. Try again in a moment.", code: 502 });
+  }
 
-// sanitize context and produce a list of image urls
+  if (!req.contents.length) {
+    return res.status(422).json({
+      message: "No text found. Make sure the whole receipt is in frame and well lit.",
+      code: 422,
+    });
+  }
+  next();
+};
 
-let retries = 0;
-export const getImageItemUrl = async (req, res, next) => {
-    if (!req.contents) res.status(500).json({ message: "No contents from process image" });
+// Step 2: a model structures the lines into the receipt schema.
+export const extractReceiptJson = async (req, res, next) => {
+  const started = Date.now();
+  try {
+    const { data, model, attempts } = await completeJson(receiptImagePrompt(req.contents), {
+      preferredModel: req.body?.activeModelName,
+      validate: assertUsableReceipt,
+    });
+    req.jsonResult = normalizeReceipt(data, { sourceType: "image" });
+    req.modelUsed = model;
+    req.attempts = attempts;
+    req.timings.ai = Date.now() - started;
+    next();
+  } catch (err) {
+    console.error("[ocr] every model failed", err.attempts);
+    res.status(503).json({
+      message: "The AI models are busy right now. Your photo was read, please try again shortly.",
+      code: 503,
+      attempts: err.attempts,
+    });
+  }
+};
 
-    // sanitizing query
-    try {
-        const imageQuery = await filterItemQuickParser(req.contents, req); // passing req to readTextAi later
-        // parsing query to image url
+// Step 3: attach a product picture for the receipt card. Never blocks the result.
+export const attachProductImage = async (req, res, next) => {
+  const started = Date.now();
+  const query = buildImageQuery(req.jsonResult);
+  req.jsonResult.metadata.image_source = await findProductImage(query);
+  req.timings.image = Date.now() - started;
+  next();
+};
 
-
-        console.log('Image query ::', imageQuery);
-        req.images_url = await findImagesWithTavily(imageQuery);
-
-        if (!req.images_url) throw new Error('Null image url')
-        next();
-    } catch (err) {
-        ++retries;
-        if (retries < 3) {
-            console.log('Retrying ...');
-            getImageItemUrl(req, res, next);
-        } else {
-            console.log('Proceding to next');
-            req.images_url = null;
-            next();
-            // res.status(500).json({ message: "Unable to get image url", code: 500, error: err });
-            // console.error(err);
-        }
-
-    }
-}
-
-
-// combined into specific receipt format prompts to be more accurate
-export const generatingSanitizePrompts = (req, res, next) => {
-    try {
-        if(req.contents.length === 0) throw new Error("No Contents");
-            req.prompts = handleReceiptFormatPrompts(req.contents, req.images_url);
-            next();     
-    } catch (err) {
-        console.error('Unable to sanizite prompts');
-    }
-}
-
-
-// export const defaultAi = async (prompt) => {
-//  try {
-//             console.log('prompt :: return a object value for this ', prompt);
-//             const result = await model.generateContent(prompt);
-//             const response = await result.response;
-
-//             res.json({ text: response.text() });
-//         } catch (error) {
-//             console.log('Err ;:', error)
-//             res.status(500).json({ error: "AI failed to respond" });
-//         }
-// }
-
-// convert all into valid json object
-export const producingJsonOutput = async (req, res, next) => {
-    console.log(chalk.blue('File form data --> ', ))
-    try {
-        const { activeModelName } = req.body;
-        console.log(chalk.red('Model name ::' + activeModelName));
-
-        // console.log('Prompts ::', req.prompts);
-        req.output = await defaultAi(req.prompts);
-
-        // req.output
-        console.log(chalk.blue('output --> ' + req.output));
-        next();
-    } catch (err) {
-        try {
-            req.output = await readTextAi(req.prompts, req, activeModelName)();
-            next()
-        } catch(err) {
-            console.error('Unable to read prompts', err);
-            res.status(500).json({ message: "Failed to read prompts", code: 500 });
-        }
-    }
-}
-
-export const validateFormat = (req, res, next) => {
-
-     function cleanJsonOutput(text) {
-    return text
-    .replace(/```json\s*/gi, "")
-    .replace(/```/g, "")
-    .trim();
-    }
-    const cleanMarkDown = cleanJsonOutput(req.output);
-    
-    
-    // parsing after cleaning
-    const result = ReceiptSchema.safeParse(JSON.parse(cleanMarkDown));
-
-    if (!result.success) {
-        console.error("Invalid receipt:", result.error.format());
-        res.status(500).json({ message: "Format does not match", code: 500 });
-    } else {
-        console.log("Valid receipt:");
-        req.jsonResult = result.data;
-        next();
-    }
-}
-
-// convert text into json
-// extract receipt profile image url
-// add image url into meta data 
-
+export const sendReceipt = (req, res) => {
+  res.status(200).json({
+    message: "Done extracting text",
+    code: 200,
+    contents: req.jsonResult,
+    model: req.modelUsed,
+    attempts: req.attempts,
+    timings: req.timings,
+  });
+};
