@@ -25,8 +25,8 @@ export const deleteCloudImage = async (req, res, next) => {
 export const uploadCloudImage = async (req, res, next) => {
     const { public_url } = req.body;
 
-    if(public_url){
-         await config.cloudinary.uploader.destroy(public_url);
+    if (public_url && public_url !== "undefined") {
+        await config.cloudinary.uploader.destroy(public_url).catch(() => null);
     }
 
       try {
@@ -59,7 +59,8 @@ export const uploadCloudImage = async (req, res, next) => {
 
         res.json({ 
             message: "Upload successful", 
-            imageUrl: result.secure_url 
+            imageUrl: result.secure_url,
+            publicId: result.public_id
         });
 
     } catch (error) {

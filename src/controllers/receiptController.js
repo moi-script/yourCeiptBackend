@@ -1,3 +1,4 @@
+import config from "../config/config.js";
 import Receipt from "../models/Receipt.js";
 
 
@@ -62,16 +63,17 @@ export const uploadParseText = async (req, res, next) => {
 
 export const deleteReceipt = async (req, res) => {
   const { id } = req.query;
-  console.log('Id for delete receipt ::', id);
 
   try {
-    const deletedItem = await Receipt.deleteOne({ _id: id });
+    const receipt = await Receipt.findById(id).select("metadata.receipt_image_id").lean();
+    if (!receipt) return res.status(404).json({ message: "Item not found" });
 
-    if (!deletedItem) {
-      return res.status(404).json({ message: "Item not found" });
-    }
+    await Receipt.deleteOne({ _id: id });
+    // Remove the stored photo too, if there is one.
+    const imageId = receipt.metadata?.receipt_image_id;
+    if (imageId) await config.cloudinary.uploader.destroy(imageId).catch(() => null);
 
-    res.status(200).json({ message: "Item deleted successfully", deletedItem });
+    res.status(200).json({ message: "Item deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

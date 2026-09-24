@@ -84,27 +84,20 @@ export const getUserManualReceipts = async (req, res, next) => {
 
 
 
-export const userAuth = async (req, res, next) => { // needed to parse the incomming request in userAuth
-  console.log('User auth email :: ', req.body.email);
+export const userAuth = async (req, res, next) => {
+  const user = await User.findOne({ email: String(req.body.email || '').toLowerCase() });
 
-  const user = await User.findOne({ email: req.body.email });
-
-  // console.log("User result :: ", user);
-  if (user.checkPassword) {
-    const isMatch = await user.checkPassword(req.body.password);
-    if (isMatch) {
-
-      // populate userId from db to passed for jwt
-      req.userId = user._id;
-      req.user = await User.findOne({ _id: user._id }).select('fullname nickname email _id, currency theme nearLimit overSpending image_profile image_public_url').lean();
-      next();
-
-    } else {
-      res.status(404).json({ message: 'Invalid email or password', status: 404 });
-    }
+  // Same message for unknown email and wrong password, so the form doesn't
+  // reveal which emails have accounts.
+  if (!user || !(await user.checkPassword(req.body.password))) {
+    return res.status(404).json({ message: 'Invalid email or password', status: 404 });
   }
-  else res.status(500).send('Internal server error');
 
+  req.userId = user._id;
+  req.user = await User.findOne({ _id: user._id })
+    .select('fullname nickname email _id currency theme nearLimit overSpending image_profile image_public_url twoFactor keepReceiptImages')
+    .lean();
+  next();
 }
 
 
@@ -119,7 +112,7 @@ export const updateTheme = async (req, res, next) => {
       userId,
       {
         $set: {
-          theme: preferences,
+          theme: preferences === 'dark' ? 'dark' : 'light',
         }
       },
       { new: true, runValidators: true }).select('theme');
@@ -319,25 +312,6 @@ export const updateProfilePic = async (req, res, next) => {
 
 }
 
-export const deleteUserAccount = async (req, res, next) => {
-  const { userId, password } = req.body;
-
-  try {
-    const deleteAccount = await User.findOne({ _id: userId });
-    if (deleteAccount.checkPassword) {
-      const isMatch = await deleteAccount.checkPassword(password);
-
-      if (isMatch) {
-        const deleteAccount = await User.deleteOne({ _id: userId });
-        req.deleteAccount = deleteAccount;
-        next();
-      }
-    }
-
-  } catch (err) {
-    console.err(err)
-  }
-}
 
 
 
@@ -425,9 +399,10 @@ export const resetPassword = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(newPassword, salt);
 
-    // Clear OTP fields
+    // Clear OTP fields and sign out every existing session
     user.otp = undefined;
     user.otpExpires = undefined;
+    user.tokenVersion = (user.tokenVersion ?? 0) + 1;
     await user.save();
 
     res.json({ message: "Password reset successful" });

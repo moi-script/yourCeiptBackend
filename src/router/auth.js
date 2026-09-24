@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 const router = express.Router();
-import { createUser, deleteUserAccount, getUserManualReceipts, getUserReceipts, 
+import { createUser, getUserManualReceipts, getUserReceipts, 
     resetPassword, sendOTP, updateCurrency, updateFullName, updateNearLimit, 
     updateNickname, updateOverSpending, updateProfilePic,
      updateTheme, verifyOTP } from '../controllers/userController.js';
@@ -14,6 +14,7 @@ import rateLimit from 'express-rate-limit';
 import { generateTokenAndSetCookie } from '../middleware/generateToken.js';
 import { verifyToken } from '../middleware/verifyToken.js';
 import chalk from 'chalk';
+import { clearAuthCookies, changePassword, deleteAccount, exportMyData, getSecurity, handleSecondFactor, signOutEverywhere, updateSecurity, verifyLoginCode } from '../controllers/securityController.js';
 
 // rateLimit, for production test
 
@@ -30,10 +31,9 @@ router.post('/login',  transformLogin,
     validateUserInput().isPassLength(),
     sanitized,
     userAuth,
+    handleSecondFactor,   // may stop here and email a code instead
     generateTokenAndSetCookie,
     (req, res) => {
-        console.log(chalk.blue('User login successfulyy ::', req.userId));
-        console.log(('Login logggss', {...req.user}));
         res.status(200).json({message : "Succesfully login", status : 200, _id : req.userId, ...req.user});
         // console.log('After sanitation :: ', req.body);
     }
@@ -72,27 +72,13 @@ router.get('/verify', verifyToken, (req, res) => {
 
 
 router.post('/receipts', getUserReceipts, getUserManualReceipts, (req, res) => {
-    setTimeout(() => {
     res.status(200).json({success : true, contents : req.receipts})
-
-    }, 800);
 })
 
 router.post('/logout', (req, res) => {
-    // Clear the cookie named 'token' (or whatever you named your JWT cookie)
-    res.clearCookie('accessToken', {
-        httpOnly: true,
-        secure: false, 
-        path: '/',
-        sameSite: 'lax' 
-    });
-     res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: false, 
-        path: '/',
-        sameSite: 'lax' 
-    });
-    
+    // Must match the attributes the cookies were set with, or the browser
+    // keeps them (this used to clear with sameSite: 'lax' and did nothing).
+    clearAuthCookies(res);
     return res.status(200).json({ message: 'Logged out successfully' });
 });
 
@@ -126,22 +112,21 @@ router.post('/image_profile', updateProfilePic, (req, res) => {
     res.status(200).json({message : "Update Done", code : 200, public_url : req.public_url});
 })
 
-router.delete('/delete-account', deleteUserAccount, (req, res) => {
+router.delete('/delete-account', verifyToken, deleteAccount);
 
-     res.clearCookie('accessToken', {
-        httpOnly: true,
-        secure: false, 
-        path: '/',
-        sameSite: 'lax' 
-    });
-     res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: false, 
-        path: '/',
-        sameSite: 'lax' 
-    });
-    res.status(200).json({message : "Delete Done", code : 200});
-})
+// Two-step sign-in: second half of /login when the account has it switched on.
+router.post('/login/verify-code', verifyLoginCode, generateTokenAndSetCookie, (req, res) => {
+    res.status(200).json({ message: "Succesfully login", status: 200, _id: req.userId, ...req.user });
+});
+
+// Privacy & security (session cookie required)
+router.get('/security', verifyToken, getSecurity);
+router.post('/security', verifyToken, updateSecurity);
+router.post('/change-password', verifyToken, changePassword, generateTokenAndSetCookie, (req, res) => {
+    res.status(200).json({ message: "Password changed. Other devices have been signed out." });
+});
+router.post('/signout-all', verifyToken, signOutEverywhere);
+router.get('/export', verifyToken, exportMyData);
 
 
 router.post('/send-otp', sendOTP);

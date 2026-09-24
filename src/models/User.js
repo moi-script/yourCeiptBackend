@@ -52,7 +52,18 @@ const accountSchema = new mongoose.Schema({
   joinedAt: {
     type: Date,
     default: Date.now
-  }
+  },
+
+  // Privacy & security settings
+  twoFactor: { type: Boolean, default: false },          // email code on every sign-in
+  keepReceiptImages: { type: Boolean, default: true },   // store the original photo
+  loginOtp: { type: String },
+  loginOtpExpires: { type: Date },
+  loginOtpAttempts: { type: Number, default: 0 },
+  // Bumped by "sign out everywhere"; tokens carry the version they were issued with.
+  tokenVersion: { type: Number, default: 0 },
+  lastLoginAt: { type: Date },
+  lastLoginDevice: { type: String },
 });
 
 

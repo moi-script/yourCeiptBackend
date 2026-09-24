@@ -50,6 +50,9 @@ const ReceiptSchema = new mongoose.Schema({
         source_type : String,
         type : { type : String},
         image_source : String,
+        // Original photo, when the user keeps receipt photos (Privacy settings).
+        receipt_image : String,
+        receipt_image_id : String,
     }
 }, { timestamps: true })
 

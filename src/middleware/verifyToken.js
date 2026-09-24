@@ -22,7 +22,7 @@ export const verifyToken = async (req, res, next) => {
         try {
             // req.user = await User.findOne({_id : decoded.userId }).select('fullname nickname email _id currency theme overSpending nearLimit image_profile');
             // Never send the password hash (or reset OTP) to the browser.
-            req.user = await User.findOne({_id : decoded.userId }).select('-password -otp -otpExpires').lean()
+            req.user = await User.findOne({_id : decoded.userId }).select('-password -otp -otpExpires -loginOtp -loginOtpExpires -loginOtpAttempts').lean()
             
             // console.log('Req user after verifying ', req.user);
 
@@ -31,6 +31,10 @@ export const verifyToken = async (req, res, next) => {
         }
         if (!req.user) {
             return res.status(401).json({ message: "User not found" });
+        }
+
+        if ((decoded.tv ?? 0) !== (req.user.tokenVersion ?? 0)) {
+            return res.status(401).json({ message: "Session was signed out" });
         }
 
         // 4. MOVE TO NEXT STEP
