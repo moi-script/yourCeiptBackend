@@ -15,6 +15,7 @@ import files from './src/router/upload.js';
 import receipt from './src/router/receipts.js';
 import budget from './src/router/budget.js';
 import notification from './src/router/notification.js';
+import appRoutes from './src/router/app.js';
 
 // path
 
@@ -67,6 +68,9 @@ app.use('/', budget);
 
 
 app.use('/notification', notification);
+
+// public Android app download counter for the landing page
+app.use('/app', appRoutes);
 
 
 app.get('/user/register', (req, res) => {
